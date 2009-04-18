@@ -212,7 +212,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 
 	
 	function getHeaderScript() {
-		$ret .= $this->addLine('<script src="http://maps.google.com/maps?file=api&v=2&key=%s" charset="utf-8"></script>');
+		$ret .= $this->addLine('<script src="http://maps.google.com/maps?file=api&v=2.s&key=%s" charset="utf-8"></script>');
 	    $ret .= $this->addLine('<script type="text/javascript">');
 		$ret .= $this->addLine('/*<![CDATA[*/',1);
 		$ret .= $this->addLine('<!--',1);	
