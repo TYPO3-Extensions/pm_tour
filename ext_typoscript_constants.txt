@@ -1,0 +1,4 @@
+
+plugin.tx_pmtour_pi1 {
+
+}

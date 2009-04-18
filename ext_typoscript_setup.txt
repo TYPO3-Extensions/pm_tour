@@ -1,0 +1,178 @@
+# Setup
+config.doctype = xhtml_strict
+config.xhtml_cleaning = output
+config.htmlTag_setParams = xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+
+plugin.tx_pmtour_pi1 {
+
+  # template file
+  templateFile = EXT:pm_tour/pi1/res/template.tmpl  
+  googleMap {
+	  key = 
+	  width=600px
+	  height=400px
+	  mapType=hybrid
+	  visible=1
+  }
+  
+  singleView {
+  	tourname_stdWrap {
+  		wrap = <h2>|</h2>
+  	}
+  	tournumber_stdWrap {
+  		wrap = <p class="bodytext">|</p>
+  	}
+	tourlength_stdWrap {
+		wrap = <p class="bodytext">|</p>
+  	}
+	tourduration_stdWrap {
+		wrap = <p class="bodytext">|</p>
+  	}
+  	
+	tourimage_stdWrap {
+		path = uploads/tx_pmtour/
+	    file.maxW = 200px
+	    file.maxH = 150px
+	    wrap = |&nbsp;
+	    imageLinkWrap = 1
+	    imageLinkWrap {
+	      enable = 1
+	      bodyTag = <body bgColor="#ffffff">
+	      wrap = <a href="javascript:close();"> | </a>
+	      width = 500m
+	      height = 500
+	      JSwindow = 1
+	      JSwindow.newWindow = 1
+	      JSwindow.expand = 17,20
+	    }
+  	}
+	tourimages_stdWrap {
+		wrap = <p class="bodytext">|</p>
+  	}  	
+  	tourdescription_stdWrap {
+  		parseFunc < tt_content.text.20.parseFunc
+  	}
+  	gpxfile {
+  		path = uploads/tx_pmtour/
+		icon = 1
+		wrap= </td><td valign="middle"><p class="bodytext">&nbsp;|</p>
+  	}
+  	gpxfile_stdWrap {
+  		wrap = <table cellpadding="0" cellspacing="0" border="0"><tr><td valign="middle">|</td></tr></table>
+  	}
+  	googlemap {
+  		routeColor = #0000FF;
+  		routeColor0 = #0000FF;
+  		routeColor1 = #FF0000;
+  		routeColor2 = #00FF00;
+  		routeColor3 = #FF00FF;
+  		routeWeight = 3
+  		routeWeight0 = 5
+  		routeWeight1 =
+  		routeOpacity = 100
+  		routeOpacity0 =
+  		routeOpacity1 =
+  		trackColor = #FF0000;
+  		trackColor0 = #FF0000;
+  		trackColor1 = #0000FF;
+  		trackWeight = 5
+  		trackWeight0 =
+  		trackWeight1 =
+  		trackOpacity = 100
+  		trackOpacity0 =
+  		trackOpacity1 =
+	    defaultDatabaseMarkerIcon=EXT:pm_tour/pi1/res/image.png
+	    allowedWaypointsSymbols = Lodging|Bar|Restaurant|Fitness Center
+	    iconsWaypointsSymbols = EXT:pm_tour/pi1/res/bed.png|EXT:pm_tour/pi1/res/bar.png|EXT:pm_tour/pi1/res/restaurant.png|EXT:pm_tour/pi1/res/fitnesscenter.png
+  	}
+  	googlemap_stdWrap {
+  		wrap = <p class="bodytext">|</p>
+  	}
+  	pointFilter {
+  		divider = &nbsp;|&nbsp;
+  		data = 1|2|4|8|16|32
+  		display = jeden|jeden 2.|jeden 4.|jeden 8.|jeden 16.|jeden 32.
+  	}
+  	pointFilter_stdWrap {
+  		wrap = <p class="bodytext">Zeige&nbsp; | &nbsp;Punkt.</p>
+  	}
+  	pointFilterItem_stdWrap {
+  		
+  	}
+  	pointFilterItemSelected_stdWrap {
+  		wrap = <b>|</b>
+  	}
+
+  }
+  
+  marker {
+  	title_stdWrap {
+  		wrap = <b>|</b><br />
+  	}  	
+  	description_stdWrap {
+  		wrap = |<br />
+  	}
+	image_stdWrap {
+		path = uploads/tx_pmtour/
+	    file.maxW = 
+	    file.maxH = 50px
+	    wrap = |&nbsp;
+	    imageLinkWrap = 1
+	    imageLinkWrap {
+	      enable = 1
+	      bodyTag = <body bgColor="#ffffff">
+	      wrap = <a href="javascript:close();"> | </a>
+	      width = 500m
+	      height = 500
+	      JSwindow = 1
+	      JSwindow.newWindow = 1
+	      JSwindow.expand = 17,20
+	    }
+  	}
+	images_stdWrap {
+	
+  	}
+  	
+  	url_stdWrap {
+  		parseFunc < tt_content.text.20.parseFunc
+  		wrap = <p class="bodytext">|</p>
+  	}
+  }
+
+  
+  list {
+  	country_sort = sorting
+  	countryList_stdWrap {
+  	}
+	country_stdWrap {
+		wrap = <h4>|</h4>
+  	}
+  	regionList_stdWrap {
+  	}
+  	region_sort = sorting
+  	region_stdWrap {
+		wrap = <p class="bodytext">|</p>  		
+  	}
+  	tourList_stdWrap {
+  		wrap = <p class="bodytext">|</p>
+  	}
+  	tour_sort = sorting
+  	tour_stdWrap {
+
+  	}
+  	tourname_stdWrap {
+  	
+  	}
+  	tournumber_stdWrap {
+  		
+  	}
+  	tourlength_stdWrap {
+  		
+  	}
+  	tourduration_stdWrap {
+  		
+  	}
+  	
+  }
+  
+}

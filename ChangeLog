@@ -1,0 +1,35 @@
+Next planed:
+	* Animations
+	
+06-08-24 0.0.7 pm	
+	* Corrected some IE behaviours
+
+06-08-24 0.0.6 pm
+	* Google Maps 2.0
+	* Own Google Maps API class created
+	* Filter's now directly affect via javascript and without reloading the page
+	* GUnload Method inserted because of Memory Leacks in some browsers
+	
+06-08-21 0.0.5 pm
+	* Define your own Icons and set them on a tourpoint
+	* Define a link for a Tourpoint
+	* New Icons for the backend
+	
+06-08-13 0.0.4 pm
+	* Added support to set a different tourpoint icon on google map
+	* Added support to show waypoints from gpx file, filtered by symbol name
+	* Added support to set waypoints icons for each symbol name in gpx file (from filter)
+	
+06-08-01 0.0.3 pm
+	* Added support of filtering map points from gpx file!	
+
+06-07-30 0.0.2 pm
+	* Changing Classnames to Typo3 Conventions
+	* Solved the Update Database errors
+	* Some changes in Template and Setup Script (Removed Countryname from Template)
+
+06-07-29 0.0.1 pm
+	* First Typo3 Release
+
+06-07-22 0.0.0 pm
+	* Initial release
