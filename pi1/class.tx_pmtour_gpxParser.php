@@ -65,7 +65,7 @@ class tx_pmtour_gpxParser{
    				$this->output["trk".$this->trkseg]["trkpt_count"] = $this->trkpt;
    				break;
    			case "ELE":
-      			if ($this->trkseg >= 0) {	
+      			if ($this->trkseg >= 0 || $this->currentwpt >= 0) {	
 					$this->currentdata=null;
 					$this->readingdata=1;
       			}
@@ -135,11 +135,13 @@ class tx_pmtour_gpxParser{
       		}
       		break;      	
       	case "ELE":
-      		if ($this->trkpt >= 0) {
+      		if ($this->currentwpt>=0) {
+      			$this->output["wpt".$this->currentwpt]["ELE"] = $this->currentdata;
+      		} else if ($this->trkpt >= 0) {
       			$currenttrkptidx = $this->trkpt - 1 ;
       			$currenttrkpt= &$this->output["trk".$this->trkseg]["trkpt".$currenttrkptidx] ;
       			$currenttrkpt["ELE"]= $this->currentdata ;
-      		}
+      		} 
       		break;      		
       	default:
       	   break;

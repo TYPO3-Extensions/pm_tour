@@ -216,39 +216,18 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		reset($allowedSymbolsIcons);
 		
 		while (is_numeric($this->gpx->output["wpt".$i]["LON"])) {
-			$wpt = $this->gpx->output["wpt".$i];
+			$wpt = $this->gpx->output["wpt".$i++];
+			// TODO rename allowedSymbols
 			$index = array_search($wpt["SYM"],$allowedSymbols);
-			if ($index) {
-				$markerArray = array();
-				$subpartArray = array();
-				$wrappedSubpartArray = array();
-				$markerArray['###TITLE###'] = $this->cObj->stdWrap($wpt["NAME"], $this->conf["marker."]["title_stdWrap."]);
-				$desc = "";
-				if (strlen($wpt["LINK"])>0) {
-					if (strlen($desc)>0) {
-						$desc .= '<br />';
-					}
-					$desc .= '<a href="'.$wpt["LINK"].'" target="_blank">'.$wpt["LINK"].'</a>';
-				}
-				if (strlen($wpt["DESC"])>0) {
-					if (strlen($desc)>0) {
-						$desc .= '<br />';
-					}
-					$desc .= $wpt["DESC"];
-				}
-
-				if (strlen($desc)==0) {
-					$markerArray['###DESCRIPTION###'] = "";
-				} else {
-					$markerArray['###DESCRIPTION###'] = $this->cObj->stdWrap($desc, $this->conf["marker."]["description_stdWrap."]);
-				}
-				$markerArray['###IMAGES###'] = $this->cObj->stdWrap('<img src="'.$GLOBALS['TSFE']->tmpl->getFileName($allowedSymbolsIcons[$index]).'">', $this->conf["marker."]["images_stdWrap."]);
-				$html = $this->cObj->substituteMarkerArrayCached($this->templateItems["marker"],$markerArray,$subpartArray,$wrappedSubpartArray);
-				$html = str_replace("\n","",$html);
-				$html = str_replace("\r","",$html);
-				$this->gmap->addMarker(floatval($wpt["LAT"]),$wpt["LON"],$html,$GLOBALS['TSFE']->tmpl->getFileName($allowedSymbolsIcons[$index]));
-			}
-			$i++;
+		    if ($index) {
+			  $image = $GLOBALS['TSFE']->tmpl->getFileName($allowedSymbolsIcons[$index]);
+		    } else {
+		      $image = null;	
+		    }
+			
+			$html = $this->createMarkerPopupHtml($wpt,$image);
+			$hover = $html == null ? $wpt["NAME"] : $this->cObj->stdWrap($wpt["NAME"], $this->conf["marker."]["hoverPopupAvailable_stdWrap."]) ;
+			$this->gmap->addMarker(floatval($wpt["LAT"]),$wpt["LON"],$wpt["NAME"],$hover, $html, $image);
 		}
 
 		//Markers Database with Images
@@ -318,6 +297,49 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$content = $this->gmap->getContentElement();
 
 		return $content;
+	}
+	
+	function createMarkerPopupHtml($wpt, $image) {
+		$markerArray = array();
+		$desc = $wpt["DESC"]; 
+		$url = $wpt["LINK"];
+		$elevation = $wpt["ELE"];
+		if ($desc == null && $url == null && $elevation == null) {
+			// do not provide a popup if it does not provide any new information
+			// note that the title/name is already showed at mouse hover, so it is not considered here 
+			return null;
+		}
+		$markerArray['###TITLE###'] = $this->cObj->stdWrap($wpt["NAME"], $this->conf["marker."]["title_stdWrap."]);
+		
+		if (strlen($url) == 0) {
+			$markerArray['###URL###'] = "";	
+		} else {
+			$markerArray['###URL###'] = '<a href="'.$url.'" target="_blank">'.$url.'</a>';	
+		}
+
+		if (strlen($desc)==0) {
+			$markerArray['###DESCRIPTION###'] = "";
+		} else {
+			$markerArray['###DESCRIPTION###'] = $this->cObj->stdWrap($desc, $this->conf["marker."]["description_stdWrap."]);
+		}
+		
+		if ($image == null) {
+			$markerArray['###IMAGES###'] = "";
+		} else {
+			$markerArray['###IMAGES###'] = $this->cObj->stdWrap('<img src="'.$image.'">', $this->conf["marker."]["images_stdWrap."]);
+		}
+		
+		if ($elevation == null) {
+			$markerArray['###ELEVATION###'] = "";
+		} else {
+			$markerArray['###ELEVATION###'] = $this->cObj->stdWrap($elevation, $this->conf["marker."]["elevation_stdWrap."]);
+		}
+		$subpartArray = array();
+		$wrappedSubpartArray = array();
+		$html = $this->cObj->substituteMarkerArrayCached($this->templateItems["marker"],$markerArray,$subpartArray,$wrappedSubpartArray);
+		$html = str_replace("\n","",$html);
+		$html = str_replace("\r","",$html);
+		return $html;
 	}
 	
 

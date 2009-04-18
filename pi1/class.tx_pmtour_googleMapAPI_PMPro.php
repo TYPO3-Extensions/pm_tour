@@ -140,10 +140,12 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$this->center_lon = 7.57164;
 	}
 	
-	function addMarker($lat, $lon, $html = '', $iconImage = '', $iconShadowImage = '') {
+	function addMarker($lat, $lon, $title, $hover, $html = '', $iconImage = '', $iconShadowImage = '') {
 		$marker['lon'] = $lon;
 		$marker['lat'] = $lat;
-		$marker['html'] = strlen($html) > 0 ? $html : $title;
+		$marker['title'] = $title;
+		$marker['html'] = $html;
+		$marker['hover'] = $hover;
 		if ($iconImage) {
 			if (!($_image_info = @getimagesize($iconImage))) {
 				die('GoogleMapAPI:createMarkerIcon: Error reading image: ' . $iconImage);
@@ -250,6 +252,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$i=0;
 		$icons = array();
 		foreach($this->markers as $marker) {
+			$gmarkeroptions = array(); // java script options, e.g. {title:"My Way Point",icon:mapa390e50e2d0c7fc8f27e2ea71a559d5aicons['0']}
 			if ($marker["icon"]) {
 				$icon = $icons[$marker["icon"]["image"].$marker["icon"]["shadow"]];
 				
@@ -266,12 +269,14 @@ class tx_pmtour_googleMapAPI_PMPro {
 					$ret .= $this->addLine(sprintf('%s['.$icon.'].iconAnchor = new GPoint(%s, %s);', $iconsname, $marker["icon"]["iconAnchorX"], $marker["icon"]["iconAnchorY"]),3);
 					$ret .= $this->addLine(sprintf('%s['.$icon.'].infoWindowAnchor = new GPoint(%s, %s);', $iconsname, $marker["icon"]["infoWindowAnchorX"], $marker["icon"]["infoWindowAnchorY"]),3);
 				}
-				$ret .= $this->addLine(sprintf('%s['.$i.'] = new GMarker(new GLatLng(%s,%s), %s['.$icon.']);',$markersname, $marker["lat"], $marker["lon"],$iconsname),3);
-			} else {
-				$ret .= $this->addLine(sprintf('%s['.$i.'] = new GMarker(new GLatLng(%s,%s));',$markersname, $marker["lat"], $marker["lon"]),3);
-			}			
-			$html = str_replace("'","\'",$marker["html"]);
-			$ret .= $this->addLine(sprintf('GEvent.addListener(%s['.$i.'], "click", function() { %s['.$i.'].openInfoWindowHtml(\'%s\'); });',$markersname,$markersname,$html),3);
+				array_push($gmarkeroptions, "icon:".$iconsname."['".$icon."']");
+			}
+			array_push($gmarkeroptions, "title:'".$marker["hover"]."'");
+			$ret .= $this->addLine(sprintf('%s['.$i.'] = new GMarker(new GLatLng(%s,%s),{%s});',$markersname, $marker["lat"], $marker["lon"], implode(",",$gmarkeroptions)), 3);
+			if ($marker["html"] != null) {
+				$html = str_replace("'","\'",$marker["html"]);
+				$ret .= $this->addLine(sprintf('GEvent.addListener(%s['.$i.'], "click", function() { %s['.$i.'].openInfoWindowHtml(\'%s\'); });',$markersname,$markersname,$html),3);
+			}
 			$i++;
 		}
 		$ret .= $this->addLine('}',2);

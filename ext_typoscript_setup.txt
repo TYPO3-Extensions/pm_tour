@@ -106,6 +106,9 @@ plugin.tx_pmtour_pi1 {
   }
   
   marker {
+  	hoverPopupAvailable_stdWrap {
+  		wrap = |, click to show further information
+  	}  	
   	title_stdWrap {
   		wrap = <b>|</b><br />
   	}  	
@@ -131,6 +134,10 @@ plugin.tx_pmtour_pi1 {
   	}
 	images_stdWrap {
 	
+  	}
+  	
+  	elevation_stdWrap {
+  	    wrap = Elevation:&nbsp;|<br/>
   	}
   	
   	url_stdWrap {
