@@ -69,6 +69,7 @@ CREATE TABLE tx_pmtour_tour (
 	length_km tinytext NOT NULL,
 	duration_h tinytext NOT NULL,
 	images blob NOT NULL,
+	imagecaptions text NOT NULL,
 	gpxfile blob NOT NULL,
 	displaytype int(11) DEFAULT '0' NOT NULL,
 	region int(11) DEFAULT '0' NOT NULL,

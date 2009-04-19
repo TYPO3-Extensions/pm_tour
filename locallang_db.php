@@ -19,6 +19,7 @@ $LOCAL_LANG = Array (
 		'tx_pmtour_tour.length_km' => 'Length (km)',	
 		'tx_pmtour_tour.duration_h' => 'Duration (h)',	
 		'tx_pmtour_tour.images' => 'Images',	
+		'tx_pmtour_tour.imagecaptions' => 'Image Captions',	
 		'tx_pmtour_tour.gpxfile' => 'GPXFile',	
 		'tx_pmtour_tour.displaytype.I.0' => 'Route',	
 		'tx_pmtour_tour.displaytype.I.1' => 'Track',	

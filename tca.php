@@ -181,7 +181,7 @@ $TCA["tx_pmtour_countries"] = Array (
 $TCA["tx_pmtour_tour"] = Array (
 	"ctrl" => $TCA["tx_pmtour_tour"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,name,description,number,length_km,duration_h,images,gpxfile,displaytype,region,showfilter,showaltitudeprofile"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,name,description,number,length_km,duration_h,images,imagecaptions,gpxfile,displaytype,region,showfilter,showaltitudeprofile"
 	),
 	"feInterface" => $TCA["tx_pmtour_tour"]["feInterface"],
 	"columns" => Array (
@@ -334,6 +334,15 @@ $TCA["tx_pmtour_tour"] = Array (
 				"maxitems" => 100,
 			)
 		),
+		'imagecaptions' => array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:pm_tour/locallang_db.xml:tx_pmtour_tour.imagecaptions',		
+			'config' => array (
+				'type' => 'text',
+				'cols' => '30',	
+				'rows' => '5',
+			)
+		),
 		"gpxfile" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:pm_tour/locallang_db.php:tx_pmtour_tour.gpxfile",		
@@ -427,7 +436,7 @@ $TCA["tx_pmtour_tour"] = Array (
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], number, length_km, duration_h, images, gpxfile, displaytype, region, showfilter,showaltitudeprofile")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], number, length_km, duration_h, images, imagecaptions, gpxfile, displaytype, region, showfilter,showaltitudeprofile")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "starttime, endtime, fe_group")
