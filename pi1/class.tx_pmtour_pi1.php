@@ -94,8 +94,12 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			reset($imgs);
 			$theImgCode = "";			
 			while (list(, $img) = each($imgs)) {
-				$l = $this->conf["singleView."]["tourimage_stdWrap."];
+				$l = $this->conf["singleView."]["tourimage_stdWrap."];				
 				$l["file"] = $this->conf["singleView."]["tourimage_stdWrap."]["path"].$img;
+				if ($l["stdWrap."]["typolink."] != null) {
+				  $l["stdWrap."]["typolink."]["parameter."]["cObject."]["file"] = $l["file"];
+				  $l["stdWrap."]["typolink."]["title"] = $this->cObj->stdWrap($val["name"], $this->conf["singleView."]["tourname_stdWrap."]);
+				}
 				$theImgCode .= $this->cObj->IMAGE($l);	
 			}			
 			if (strlen($theImgCode)>0) {
