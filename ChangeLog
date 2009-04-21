@@ -1,5 +1,8 @@
-Next planed:
-	* Animations
+09-04-21 0.0.9 pm
+	* use google maps 2.s (stable version) to avoid rendering bugs
+	* display waypoints with default icon if there is no special icon defined, renamed allowedSymbols to symbolsWithIcon
+	* support images rendering with perfectlightbox
+	* added documentation, live demo and registered at typo3 forge  
 	
 06-08-24 0.0.7 pm	
 	* Corrected some IE behaviours
