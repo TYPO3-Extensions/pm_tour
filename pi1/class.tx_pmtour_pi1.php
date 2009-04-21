@@ -221,17 +221,16 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		
 		//Waypoints		
 		$i = 0;			
-		$allowedSymbols = t3lib_div::trimExplode("|", "no|".$this->conf["singleView."]["googlemap."]["allowedWaypointsSymbols"], 1);
-		$allowedSymbolsIcons = t3lib_div::trimExplode("|", "no|".$this->conf["singleView."]["googlemap."]["iconsWaypointsSymbols"], 1);
-		reset($allowedSymbols);
-		reset($allowedSymbolsIcons);
+		$symbolsWithIcon = t3lib_div::trimExplode("|", "no|".$this->conf["singleView."]["googlemap."]["waypointSymbolsWithIcons"], 1);
+		$symbolIcons = t3lib_div::trimExplode("|", "no|".$this->conf["singleView."]["googlemap."]["waypointSymbolIcons"], 1);
+		reset($symbolsWithIcon);
+		reset($symbolIcons);
 		
 		while (is_numeric($this->gpx->output["wpt".$i]["LON"])) {
 			$wpt = $this->gpx->output["wpt".$i++];
-			// TODO rename allowedSymbols
-			$index = array_search($wpt["SYM"],$allowedSymbols);
+			$index = array_search($wpt["SYM"],$symbolsWithIcon);
 		    if ($index) {
-			  $image = $GLOBALS['TSFE']->tmpl->getFileName($allowedSymbolsIcons[$index]);
+			  $image = $GLOBALS['TSFE']->tmpl->getFileName($symbolIcons[$index]);
 		    } else {
 		      $image = null;	
 		    }

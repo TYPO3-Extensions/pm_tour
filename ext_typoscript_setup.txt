@@ -82,7 +82,7 @@ plugin.tx_pmtour_pi1 {
   		trackOpacity0 =
   		trackOpacity1 =
 	    defaultDatabaseMarkerIcon=EXT:pm_tour/pi1/res/image.png
-	    allowedWaypointsSymbols = Lodging|Bar|Restaurant|Fitness Center
+	    waypointSymbolIcons = Lodging|Bar|Restaurant|Fitness Center
 	    iconsWaypointsSymbols = EXT:pm_tour/pi1/res/bed.png|EXT:pm_tour/pi1/res/bar.png|EXT:pm_tour/pi1/res/restaurant.png|EXT:pm_tour/pi1/res/fitnesscenter.png
   	}
   	googlemap_stdWrap {
