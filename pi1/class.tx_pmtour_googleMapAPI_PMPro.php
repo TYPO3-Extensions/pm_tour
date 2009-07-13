@@ -117,14 +117,14 @@ class tx_pmtour_googleMapAPI_PMPro {
 	function setMapType($type) {
 		switch ($type) {
 			case 'hybrid':
-				$this->map_type = 'G_HYBRID_TYPE';
+				$this->map_type = 'G_HYBRID_MAP';
 				break;
 			case 'satellite':
-				$this->map_type = 'G_SATELLITE_TYPE';
+				$this->map_type = 'G_SATELLITE_MAP';
 				break;
 			case 'map':
 			default:
-				$this->map_type = 'G_MAP_TYPE';
+				$this->map_type = 'G_NORMAL_MAP';
 				break;
 		}
 	}
