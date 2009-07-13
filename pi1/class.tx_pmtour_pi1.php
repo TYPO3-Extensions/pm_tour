@@ -90,14 +90,14 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$markerArray['###TOURLENGTH###'] = $this->cObj->stdWrap($val["length_km"], $this->conf["singleView."]["tourlength_stdWrap."]);
 			$markerArray['###TOURDURATION###'] = $this->cObj->stdWrap($val["duration_h"], $this->conf["singleView."]["tourduration_stdWrap."]);
 			
-			$imgs = t3lib_div::trimExplode(",", $val["images"], 1);		
-			reset($imgs);
-			$theImgCode = "";			
-			$imgCaptions = explode(chr(10), $val["imagecaptions"]);
-			while (list($imgkey, $img) = each($imgs)) {
+			$this->imageNames = t3lib_div::trimExplode(",", $val["images"], 1);		
+			reset($this->imageNames);
+			$this->imageTags = array();			
+			$this->imageCaptions = explode(chr(10), $val["imagecaptions"]);
+			while (list($imgkey, $img) = each($this->imageNames)) {
 				$l = $this->conf["singleView."]["tourimage_stdWrap."];				
 				$l["file"] = $this->conf["singleView."]["tourimage_stdWrap."]["path"].$img;
-				$imgTitle = $imgCaptions[$imgkey];
+				$imgTitle = $this->imageCaptions[$imgkey];
 				if ($imgTitle != null) {
 					$l['titleText'] = $imgTitle;
 				}
@@ -107,10 +107,11 @@ class tx_pmtour_pi1 extends tslib_pibase {
 				  	$l["stdWrap."]["typolink."]["title"] = $imgTitle;
 				  }
 				}
-				$theImgCode .= $this->cObj->IMAGE($l);	
+				array_push($this->imageTags, $this->cObj->IMAGE($l));	
 			}			
-			if (strlen($theImgCode)>0) {
-				$markerArray['###TOURIMAGES###'] = $this->cObj->stdWrap($theImgCode, $this->conf["singleView."]["tourimages_stdWrap."]);
+			$imageHtml = implode("",$this->imageTags);
+			if (strlen($imageHtml)>0) {
+				$markerArray['###TOURIMAGES###'] = $this->cObj->stdWrap($imageHtml, $this->conf["singleView."]["tourimages_stdWrap."]);
 			} else {
 				$markerArray['###TOURIMAGES###'] = "";
 			}			
@@ -314,7 +315,18 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$desc = $wpt["DESC"]; 
 		$url = $wpt["LINK"];
 		$elevation = $wpt["ELE"];
-		if ($desc == null && $url == null && $elevation == null) {
+		// look for images whose caption include the name of the waypoint
+		$popupImageTags = '';
+		if ($wpt["NAME"] != null) {
+			reset($this->imageCaptions);
+			while (list($imageKey, $imageCaption) = each($this->imageCaptions)) {
+				$pos = stripos($imageCaption, $wpt["NAME"]);
+				if ($pos !== false) {
+					$popupImageTags .= $this->imageTags[$imageKey];
+				}
+			}
+		}
+		if ($desc == null && $url == null && $elevation == null && strlen($popupImageTags)==0) {
 			// do not provide a popup if it does not provide any new information
 			// note that the title/name is already showed at mouse hover, so it is not considered here 
 			return null;
@@ -333,10 +345,10 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$markerArray['###DESCRIPTION###'] = $this->cObj->stdWrap($desc, $this->conf["marker."]["description_stdWrap."]);
 		}
 		
-		if ($image == null) {
-			$markerArray['###IMAGES###'] = "";
+		if (strlen($popupImageTags) > 0) {
+			$markerArray['###IMAGES###'] = $this->cObj->stdWrap($popupImageTags, $this->conf["marker."]["images_stdWrap."]);
 		} else {
-			$markerArray['###IMAGES###'] = $this->cObj->stdWrap('<img src="'.$image.'">', $this->conf["marker."]["images_stdWrap."]);
+			$markerArray['###IMAGES###'] = '';			
 		}
 		
 		if ($elevation == null) {
