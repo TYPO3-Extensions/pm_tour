@@ -1,3 +1,9 @@
+09-07-14 0.0.11 pm
+    * fixed map type
+    * support layers, per default the user can enable the wikipedia.de and panoramio layer 
+	* reverted to using the latest google maps version (as opposed to the stable version) for full layering support
+	* marker popup can display tour images
+
 09-04-21 0.0.9 pm
 	* use google maps 2.s (stable version) to avoid rendering bugs
 	* display waypoints with default icon if there is no special icon defined, renamed allowedSymbols to symbolsWithIcon

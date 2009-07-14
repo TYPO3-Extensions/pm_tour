@@ -139,7 +139,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 	}	
 	
 	function initMap() {
-		$this->gmap = new tx_pmtour_googleMapAPI_PMPro($this->conf["googleMap."]["key"],$this->conf["googleMap."]["mapType"]);
+		$this->gmap = new tx_pmtour_googleMapAPI_PMPro($this->conf["googleMap."]["key"],$this->conf["googleMap."]["mapType"], $this->conf["googleMap."]["layerIds"], $this->conf["googleMap."]["layerNames"]);
 		$this->gmap->setWidth($this->conf["googleMap."]["width"]);
 		$this->gmap->setHeight($this->conf["googleMap."]["height"]);
 	}
@@ -158,7 +158,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 	
 	function drawMap($uid, $gpxfile, $tour) {
 		
-		$this->gpx = new tx_pmtour_gpxParser();
+		$this->gpx = new tx_pmtour_gpxParser($this->conf["gpxEncoding"]);
 		$this->gpx->parse($gpxfile);	
 
 		
@@ -300,8 +300,6 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$this->gmap->addMarker(floatval($val["latitude"]),floatval($val["longitude"]),$html,$ico_n,$ico_s);
 		}
 
-
-
 		$GLOBALS['TSFE']->additionalHeaderData[$extKey."1"] = $this->gmap->getHeaderScript();
 		$GLOBALS['TSFE']->config['config']['doctype'] = "xhtml_strict";
 		
@@ -317,12 +315,20 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$elevation = $wpt["ELE"];
 		// look for images whose caption include the name of the waypoint
 		$popupImageTags = '';
+		$imagesAdded = 0;
 		if ($wpt["NAME"] != null) {
 			reset($this->imageCaptions);
 			while (list($imageKey, $imageCaption) = each($this->imageCaptions)) {
 				$pos = stripos($imageCaption, $wpt["NAME"]);
 				if ($pos !== false) {
-					$popupImageTags .= $this->imageTags[$imageKey];
+					$l = $this->conf["marker."]["image_stdWrap."];				
+					$l["file"] = $this->conf["marker."]["image_stdWrap."]["path"].$this->imageNames[$imageKey];
+					$l['titleText'] = $l;
+					$popupImageTags .= $this->cObj->IMAGE($l);
+					$imagesAdded += 1;
+				}
+				if ($imagesAdded == $this->conf["marker."]["maxImages"]) {
+					break;
 				}
 			}
 		}
@@ -354,7 +360,8 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		if ($elevation == null) {
 			$markerArray['###ELEVATION###'] = "";
 		} else {
-			$markerArray['###ELEVATION###'] = $this->cObj->stdWrap($elevation, $this->conf["marker."]["elevation_stdWrap."]);
+			$formattedElevation = number_format($elevation, 0, '', '');
+			$markerArray['###ELEVATION###'] = $this->cObj->stdWrap($formattedElevation, $this->conf["marker."]["elevation_stdWrap."]);
 		}
 		$subpartArray = array();
 		$wrappedSubpartArray = array();

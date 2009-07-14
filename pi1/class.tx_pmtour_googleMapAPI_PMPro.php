@@ -56,11 +56,13 @@ class tx_pmtour_googleMapAPI_PMPro {
 	var $start_filter = 1;
 	
 		
-	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type="map") {
+	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type="map", $layerIds=null, $layerNames=null) {
 		$this->api_key = $api_key;
 		
 		$this->map_id = "map".md5(uniqid(rand())); //"map"; //"map".md5(uniqid(rand()));
 		$this->setMapType($map_type);
+		$this->layerIds=$layerIds == null ? array() : explode("|",$layerIds);
+		$this->layerNames=$layerNames == null ? array() : explode("|", $layerNames);
 	}
 	
 	function setWidth($width) {
@@ -214,7 +216,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 
 	
 	function getHeaderScript() {
-		$ret .= $this->addLine('<script src="http://maps.google.com/maps?file=api&v=2.s&key=%s" charset="utf-8"></script>');
+		$ret .= $this->addLine('<script src="http://maps.google.com/maps?file=api&v=2&key=%s" charset="utf-8"></script>');
 	    $ret .= $this->addLine('<script type="text/javascript">');
 		$ret .= $this->addLine('/*<![CDATA[*/',1);
 		$ret .= $this->addLine('<!--',1);	
@@ -223,9 +225,13 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$ret .= $this->addLine('// -->',1);
 		$ret .= $this->addLine('/*]]>*/',1);
 		$ret .= $this->addLine('</script>');
+		if ($this->isUsingLayers()) {
+			$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/LayerControl.js" type="text/javascript"></script>';
+		}		
 		return sprintf($ret, $this->api_key);
 	}
 	
+	 
 	function getDrawFilterLink($filter,$title) {
 		return '<a href="javascript: draw_overlays_'.$this->map_id.'('.$filter.');">'.$title.'</a>';
 	}
@@ -318,10 +324,12 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$ret .= $this->addLine();
 		
 		//Loading
+		$ret .= $this->createLayerControl();
 		$ret .= $this->addLine(sprintf('function load_%s() {', $this->map_id),2);		
 		$ret .= $this->addLine(sprintf('%s = new GMap2(document.getElementById("%s"));',$mapname,$this->map_id),3);
 		$ret .= $this->addLine(sprintf('%s.addControl(new GLargeMapControl());',$mapname),3);
-		$ret .= $this->addLine(sprintf('%s.addControl(new GMapTypeControl());',$mapname),3);		
+		$ret .= $this->addLine(sprintf('%s.addControl(new GMapTypeControl());',$mapname),3);
+		$ret .= $this->createMoreControl($mapname);
 		$ret .= $this->addLine(sprintf('%s.setCenter(new GLatLng(%s,%s), 10);',$mapname, $this->center_lat,$this->center_lon),3);	
 		$ret .= $this->addLine(sprintf('var zoom = %s.getBoundsZoomLevel(new GLatLngBounds(new GLatLng(%s,%s),new GLatLng(%s,%s)));',$mapname,$this->min_lat,$this->min_lon,$this->max_lat,$this->max_lon),3);	
 		$ret .= $this->addLine(sprintf('%s.setCenter(new GLatLng(%s,%s), zoom);',$mapname, $this->center_lat,$this->center_lon),3);	
@@ -350,6 +358,38 @@ class tx_pmtour_googleMapAPI_PMPro {
 			$ret .= "   ";
 		}
 		return $ret.$text."\n";
+	}
+	
+	function isUsingLayers() {
+		return $this->layerIds!=null && count($this->layerIds) > 0;
+	}
+	
+	function createLayerControl() {
+		if (!$this->isUsingLayers()) {
+			return "";
+		}
+		$result = $this->createLayers();
+		$jsLayerNames = '["'.implode('","', $this->layerNames).'"]';
+		$result .= $this->addLine(sprintf('var layerControl = new LayerControl( %s );',$jsLayerNames),3);
+		return $result;
+	}
+	
+	function createMoreControl($mapname) {
+		if (!$this->isUsingLayers()) {
+			return "";
+		}
+		return $this->addLine(sprintf('%s.addControl(new MoreControl());',$mapname),3);
+	}
+	
+	function createLayers() {
+		$result = $this->addLine("var layers = [];",3);
+		reset($this->layerIds);
+		while (list($layerIndex, $layerId) = each($this->layerIds)) {
+			$result .= $this->addLine('layers['.$layerIndex.'] = new GLayer("'.$layerId.'");',3);
+			$result .= $this->addLine('layers['.$layerIndex.'].Visible = false;',3);
+			$result .= $this->addLine('layers['.$layerIndex.'].Added = false;',3);
+	    }
+	    return $result;
 	}
 	
 }

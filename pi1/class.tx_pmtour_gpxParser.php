@@ -12,7 +12,8 @@ class tx_pmtour_gpxParser{
    var $currentdata=null;
    var $readingdata=0;
    
-   function tx_pmtour_gpxParser(){
+   function tx_pmtour_gpxParser($encoding=null){
+   	   $this->encoding = $encoding;
        $this->xml_obj = xml_parser_create();
        xml_set_object($this->xml_obj,$this);
        xml_set_character_data_handler($this->xml_obj, 'dataHandler');
@@ -108,30 +109,31 @@ class tx_pmtour_gpxParser{
    }
 
    function dataHandler($parser, $data){
+   	// if encoding is utf-8 and data contains Umlaute, the data is split into several chunks
    	if ($this->readingdata) {
-   		$this->currentdata=$data;
-   		$this->readingdata=0;
+   		$this->currentdata.=$data;   		
    	}
    }
 
    function endHandler($parser, $name){
+   	  $this->readingdata=0;
       switch ($name) {
       	case "WPT":
       		$this->currentwpt = -1;
       	   break;
       	case "SYM":
 			if ($this->currentwpt>=0) {
-				$this->output["wpt".$this->currentwpt]["SYM"] = $this->currentdata;
+				$this->output["wpt".$this->currentwpt]["SYM"] = $this->convertedData();
       		}
       		break;
       	case "NAME":
 			if ($this->currentwpt>=0) {
-				$this->output["wpt".$this->currentwpt]["NAME"] = $this->currentdata;
+				$this->output["wpt".$this->currentwpt]["NAME"] = $this->convertedData();
       		}
       		break;
       	case "DESC":
 			if ($this->currentwpt>=0) {
-				$this->output["wpt".$this->currentwpt]["DESC"] = $this->currentdata;
+				$this->output["wpt".$this->currentwpt]["DESC"] = $this->convertedData();
       		}
       		break;      	
       	case "ELE":
@@ -146,6 +148,14 @@ class tx_pmtour_gpxParser{
       	default:
       	   break;
       }
+   }
+   
+   function convertedData() {
+		if ($this->encoding == null) {
+   			return $this->currentdata;
+   		} else {
+   			return mb_convert_encoding($this->currentdata, "auto", $this->encoding);
+   		}
    }
 }
 

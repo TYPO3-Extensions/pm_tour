@@ -12,8 +12,13 @@ plugin.tx_pmtour_pi1 {
 	  width=600px
 	  height=400px
 	  mapType=hybrid
+	  layerIds=org.wikipedia.de|com.panoramio.all
+	  layerNames=Wikipedia|Bilder
 	  visible=1
   }
+  
+  # encoding of the GPX files, used to convert from utf-8 to html encoding of html
+  gpxEncoding = UTF-8
   
   singleView {
   	tourname_stdWrap {
@@ -115,18 +120,21 @@ plugin.tx_pmtour_pi1 {
   	description_stdWrap {
   		wrap = |<br />
   	}
+  	
+  	maxImages = 2
+  	
 	image_stdWrap {
 		path = uploads/tx_pmtour/
-	    file.maxW = 
-	    file.maxH = 50px
+	    file.maxW = 160px
+	    file.maxH = 100px
 	    wrap = |&nbsp;
 	    imageLinkWrap = 1
 	    imageLinkWrap {
 	      enable = 1
 	      bodyTag = <body bgColor="#ffffff">
 	      wrap = <a href="javascript:close();"> | </a>
-	      width = 500m
-	      height = 500
+	      width = 1280m
+	      height = 800
 	      JSwindow = 1
 	      JSwindow.newWindow = 1
 	      JSwindow.expand = 17,20
@@ -137,7 +145,7 @@ plugin.tx_pmtour_pi1 {
   	}
   	
   	elevation_stdWrap {
-  	    wrap = Elevation:&nbsp;|<br/>
+  	    wrap = Hoehe:&nbsp;| m<br/>
   	}
   	
   	url_stdWrap {

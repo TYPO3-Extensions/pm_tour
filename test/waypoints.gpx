@@ -6,7 +6,7 @@
       <text>Garmin International</text>
     </link>
     <time>2009-04-18T15:30:33Z</time>
-    <bounds maxlat="46.5" maxlon="10.5" minlat="46.0" minlon="10.0"/>
+    <bounds maxlat="46.8" maxlon="10.8" minlat="46.0" minlon="10.0"/>
   </metadata>
 
   <!-- Anonymous waypoint -->
@@ -51,6 +51,15 @@
       </gpxx:WaypointExtension>
     </extensions>
   </wpt>
-
+  
+  <wpt lat="46.6" lon="10.6">
+    <desc>You will see a photo below if you upload a photo and add a caption which references the name of the Way point, e.g "View from Waypoint with image"</desc>
+    <name>Waypoint with image</name>
+  </wpt>
+  
+  <wpt lat="46.7" lon="10.7">
+    <desc>Check support for umlaute</desc>
+    <name>Hütte</name>
+  </wpt>
 
 </gpx>
