@@ -281,7 +281,8 @@ class tx_pmtour_googleMapAPI_PMPro {
 			$ret .= $this->addLine(sprintf('%s['.$i.'] = new GMarker(new GLatLng(%s,%s),{%s});',$markersname, $marker["lat"], $marker["lon"], implode(",",$gmarkeroptions)), 3);
 			if ($marker["html"] != null) {
 				$html = str_replace("'","\'",$marker["html"]);
-				$ret .= $this->addLine(sprintf('GEvent.addListener(%s['.$i.'], "click", function() { %s['.$i.'].openInfoWindowHtml(\'%s\'); });',$markersname,$markersname,$html),3);
+				// without setting maxWidth the popup window can become quite broad, so that the user must pan the map to reach the close button
+				$ret .= $this->addLine(sprintf('GEvent.addListener(%s['.$i.'], "click", function() { %s['.$i.'].openInfoWindowHtml(\'%s\',{maxWidth:'.($this->width-100).'}); });',$markersname,$markersname,$html),3);
 			}
 			$i++;
 		}
