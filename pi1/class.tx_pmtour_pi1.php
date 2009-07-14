@@ -342,7 +342,8 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		if (strlen($url) == 0) {
 			$markerArray['###URL###'] = "";	
 		} else {
-			$markerArray['###URL###'] = '<a href="'.$url.'" target="_blank">'.$url.'</a>';	
+			$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+			$markerArray['###URL###'] = $this->cObj->stdWrap($url, $this->conf["marker."]["url_stdWrap."]);	
 		}
 
 		if (strlen($desc)==0) {
