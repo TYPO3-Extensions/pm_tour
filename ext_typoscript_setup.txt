@@ -66,20 +66,20 @@ plugin.tx_pmtour_pi1 {
   		wrap = <table cellpadding="0" cellspacing="0" border="0"><tr><td valign="middle">|</td></tr></table>
   	}
   	googlemap {
-  		routeColor = #0000FF;
-  		routeColor0 = #0000FF;
-  		routeColor1 = #FF0000;
-  		routeColor2 = #00FF00;
-  		routeColor3 = #FF00FF;
+  		routeColor = #0000FF
+  		routeColor0 = #0000FF
+  		routeColor1 = #FF0000
+  		routeColor2 = #00FF00
+  		routeColor3 = #FF00FF
   		routeWeight = 3
   		routeWeight0 = 5
   		routeWeight1 =
   		routeOpacity = 100
   		routeOpacity0 =
   		routeOpacity1 =
-  		trackColor = #FF0000;
-  		trackColor0 = #FF0000;
-  		trackColor1 = #0000FF;
+  		trackColor = #FF0000
+  		trackColor0 = #FF0000
+  		trackColor1 = #0000FF
   		trackWeight = 5
   		trackWeight0 =
   		trackWeight1 =
