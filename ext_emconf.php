@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext: "pm_tour"
 #
-# Auto generated 21-04-2009 22:21
+# Auto generated 15-07-2009 17:28
 #
 # Manual updates:
 # Only the data in the array - anything else is removed by next write.
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Upload you GPS Tour data as GPX File. Tracks, routes and waypoints are displayed using Google Maps. An altitude profile can be rendered with Google Charts.',
 	'category' => 'plugin',
 	'shy' => 1,
-	'version' => '0.0.10',
+	'version' => '0.0.12',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -40,7 +40,7 @@ $EM_CONF[$_EXTKEY] = array(
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:41:{s:9:"ChangeLog";s:4:"9509";s:10:"README.txt";s:4:"ee2d";s:12:"ext_icon.gif";s:4:"abae";s:17:"ext_localconf.php";s:4:"be89";s:14:"ext_tables.php";s:4:"5f29";s:14:"ext_tables.sql";s:4:"5417";s:28:"ext_typoscript_constants.txt";s:4:"9534";s:28:"ext_typoscript_editorcfg.txt";s:4:"7a52";s:24:"ext_typoscript_setup.txt";s:4:"c838";s:28:"icon_tx_pmtour_countries.gif";s:4:"8c1b";s:31:"icon_tx_pmtour_countries__h.gif";s:4:"1b17";s:24:"icon_tx_pmtour_icons.gif";s:4:"63b8";s:27:"icon_tx_pmtour_icons__h.gif";s:4:"1990";s:26:"icon_tx_pmtour_regions.gif";s:4:"e034";s:29:"icon_tx_pmtour_regions__h.gif";s:4:"82f1";s:23:"icon_tx_pmtour_tour.gif";s:4:"9829";s:26:"icon_tx_pmtour_tour__h.gif";s:4:"7549";s:29:"icon_tx_pmtour_tourpoints.gif";s:4:"f15b";s:32:"icon_tx_pmtour_tourpoints__h.gif";s:4:"f690";s:13:"locallang.php";s:4:"e23a";s:16:"locallang_db.php";s:4:"749d";s:7:"tca.php";s:4:"7b3d";s:14:"doc/manual.sxw";s:4:"f35e";s:19:"doc/wizard_form.dat";s:4:"2aa5";s:20:"doc/wizard_form.html";s:4:"d139";s:14:"pi1/ce_wiz.gif";s:4:"7564";s:32:"pi1/class.tx_pmtour_altitude.php";s:4:"9fb1";s:35:"pi1/class.tx_pmtour_googleChart.php";s:4:"07e9";s:42:"pi1/class.tx_pmtour_googleMapAPI_PMPro.php";s:4:"85d9";s:33:"pi1/class.tx_pmtour_gpxParser.php";s:4:"7543";s:27:"pi1/class.tx_pmtour_pi1.php";s:4:"64c7";s:35:"pi1/class.tx_pmtour_pi1_wizicon.php";s:4:"4132";s:13:"pi1/clear.gif";s:4:"cc11";s:17:"pi1/locallang.php";s:4:"57c4";s:15:"pi1/res/bar.png";s:4:"a3e9";s:15:"pi1/res/bed.png";s:4:"b5a7";s:25:"pi1/res/fitnesscenter.png";s:4:"e3a0";s:17:"pi1/res/image.png";s:4:"e4e6";s:22:"pi1/res/restaurant.png";s:4:"6d8a";s:21:"pi1/res/template.tmpl";s:4:"83ff";s:18:"test/waypoints.gpx";s:4:"72eb";}',
+	'_md5_values_when_last_written' => 'a:42:{s:9:"ChangeLog";s:4:"844d";s:10:"README.txt";s:4:"ee2d";s:12:"ext_icon.gif";s:4:"abae";s:17:"ext_localconf.php";s:4:"be89";s:14:"ext_tables.php";s:4:"5f29";s:14:"ext_tables.sql";s:4:"5417";s:28:"ext_typoscript_constants.txt";s:4:"9534";s:28:"ext_typoscript_editorcfg.txt";s:4:"7a52";s:24:"ext_typoscript_setup.txt";s:4:"c1d0";s:28:"icon_tx_pmtour_countries.gif";s:4:"8c1b";s:31:"icon_tx_pmtour_countries__h.gif";s:4:"1b17";s:24:"icon_tx_pmtour_icons.gif";s:4:"63b8";s:27:"icon_tx_pmtour_icons__h.gif";s:4:"1990";s:26:"icon_tx_pmtour_regions.gif";s:4:"e034";s:29:"icon_tx_pmtour_regions__h.gif";s:4:"82f1";s:23:"icon_tx_pmtour_tour.gif";s:4:"9829";s:26:"icon_tx_pmtour_tour__h.gif";s:4:"7549";s:29:"icon_tx_pmtour_tourpoints.gif";s:4:"f15b";s:32:"icon_tx_pmtour_tourpoints__h.gif";s:4:"f690";s:13:"locallang.php";s:4:"e23a";s:16:"locallang_db.php";s:4:"749d";s:7:"tca.php";s:4:"7b3d";s:14:"doc/manual.sxw";s:4:"9e7b";s:19:"doc/wizard_form.dat";s:4:"2aa5";s:20:"doc/wizard_form.html";s:4:"d139";s:14:"pi1/ce_wiz.gif";s:4:"7564";s:32:"pi1/class.tx_pmtour_altitude.php";s:4:"9fb1";s:35:"pi1/class.tx_pmtour_googleChart.php";s:4:"07e9";s:42:"pi1/class.tx_pmtour_googleMapAPI_PMPro.php";s:4:"bda6";s:33:"pi1/class.tx_pmtour_gpxParser.php";s:4:"081f";s:27:"pi1/class.tx_pmtour_pi1.php";s:4:"456c";s:35:"pi1/class.tx_pmtour_pi1_wizicon.php";s:4:"4132";s:13:"pi1/clear.gif";s:4:"cc11";s:17:"pi1/locallang.php";s:4:"57c4";s:23:"pi1/res/LayerControl.js";s:4:"8ca4";s:15:"pi1/res/bar.png";s:4:"a3e9";s:15:"pi1/res/bed.png";s:4:"b5a7";s:25:"pi1/res/fitnesscenter.png";s:4:"e3a0";s:17:"pi1/res/image.png";s:4:"e4e6";s:22:"pi1/res/restaurant.png";s:4:"6d8a";s:21:"pi1/res/template.tmpl";s:4:"83ff";s:18:"test/waypoints.gpx";s:4:"6c6b";}',
 	'suggests' => array(
 	),
 );
