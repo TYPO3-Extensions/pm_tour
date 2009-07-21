@@ -55,7 +55,8 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		
 		
 		if ($this->piVars['pm_tour'] != "") {			
-			$content = $this->singleView($this->piVars['pm_tour']);						
+			// use intval to avoid SQL-Injection, results in empty page if manipulated
+			$content = $this->singleView(intval($this->piVars['pm_tour']));						
 			return  $content;			
 		} else
 		{
@@ -69,13 +70,16 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		return $content;
 	}
 	
+	/*
+	 * param: $uid as integer
+	 */
 	function singleView($uid) {
 		$this->initMap();
 		
 		$selectFields = "*";
 		$tables = "tx_pmtour_tour";
 		$where = "uid=".$uid." ".$this->cObj->enableFields("tx_pmtour_tour");	
-		$order = $this->conf["list."]["tour_sort"];        
+		$order = $this->conf["list."]["tour_sort"];   
 		$tours = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
 		foreach ($tours as $tour=>$val) {
 			$this->gmap->setStartFilter(intval($val["showfilter"]));
