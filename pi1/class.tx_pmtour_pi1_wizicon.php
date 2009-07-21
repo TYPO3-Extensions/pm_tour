@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2005 Patrick Matusz (webdesign@matusz.ch)
+*  (c) 2005 Patrick Matusz
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,7 +24,7 @@
 /**
  * Class that adds the wizard icon.
  *
- * @author	Patrick Matusz <webdesign@matusz.ch>
+ * @author	Patrick Matusz
  */
 
 

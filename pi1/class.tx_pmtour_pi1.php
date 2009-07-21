@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2005 Patrick Matusz (webdesign@matusz.ch)
+*  (c) 2005 Patrick Matusz
 *  (c) 2007 Markus Barchfeld (Markus.Barchfeld@gmx.de)
 *  All rights reserved
 *
@@ -25,7 +25,7 @@
 /**
  * Plugin 'Tour' for the 'pm_tour' extension.
  *
- * @author	Patrick Matusz <webdesign@matusz.ch>
+ * @author	Patrick Matusz
  * @author	Markus Barchfeld <Markus.Barchfeld@gmx.de>
  */
 
