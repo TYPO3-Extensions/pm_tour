@@ -100,6 +100,7 @@ CREATE TABLE tx_pmtour_tourpoints (
 	name varchar(255) DEFAULT '' NOT NULL,
 	latitude tinytext NOT NULL,
 	longitude tinytext NOT NULL,
+	elevation tinytext NOT NULL,
 	description text NOT NULL,
 	images blob NOT NULL,
 	tour int(11) DEFAULT '0' NOT NULL,
@@ -127,4 +128,3 @@ CREATE TABLE tx_pmtour_icons (
     
     PRIMARY KEY (uid),
     KEY parent (pid)
-);

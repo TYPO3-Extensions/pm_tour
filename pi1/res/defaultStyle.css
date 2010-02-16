@@ -1,0 +1,101 @@
+.pm_tours-list {
+	text-align:left;
+}
+
+.pm_tours-list h4{
+	width:100%;
+	font-size:20px;
+}
+
+.pm_tours-list table {
+	border-collapse: separate;
+/*	border-spacing: 5px;*/
+/*	margin: auto 0;*/
+	width:100%;
+}
+
+.pm_tours-list table td#region {
+	vertical-align:top;
+	font-weight:bold;
+	max-width:200px;
+	padding:3px 5px 20px 5px;
+	empty-cells:hide;
+}
+
+.pm_tours-list table#tours {
+	vertical-align:top;
+	width:600px;
+	padding:0px 5px 20px 5px;
+}
+
+.pm_tours-list table td#tours {
+	vertical-align:top;
+	min-width:360px;
+}
+
+.pm_tours-list table td#length {
+	vertical-align:top;
+	width:120px;
+}
+
+.pm_tours-list table td#duration {
+	vertical-align:top;
+	width:120px;
+}
+
+.pm_tours-select {
+	text-align:left;
+}
+
+.pm_tours-select h4{
+	width:100%;
+	font-size:20px;
+}
+
+.pm_tours-select div{
+	width:100%;
+	font-size:16px;
+	margin-left:40px;
+}
+
+.pm_tours-single{
+	text-align:center;
+}
+
+.pm_tours-single table td#head {
+	font-weight:bold;
+	padding: 10 5 10 0;
+	vertical-align:top;
+	width:20%;
+}
+
+.pm_tours-single table td#data {
+	padding: 10 0 10 0;
+	vertical-align:top;
+	width:80%;
+}
+
+.pm_tours-single table td#back {
+	text-align:right;
+	font-size:60%;
+}
+
+.pm_tours-single table td#filterhead {
+	padding: 13 5 10 0;
+	text-align:right;
+	font-weight:bold;
+	font-size:80%;
+}
+
+.pm_tours-single table td#filter {
+	padding: 13 0 10 5;
+	text-align:left;
+	font-weight:bold;
+	font-size:80%;
+}
+
+.pm_tours-single table td#googlemap {
+	padding: 13 0 10 0;
+	text-align:center;
+	vertical-align:top;
+}

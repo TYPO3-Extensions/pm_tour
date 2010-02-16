@@ -31,6 +31,7 @@ $LOCAL_LANG = Array (
 		'tx_pmtour_tourpoints.name' => 'Name',	
 		'tx_pmtour_tourpoints.latitude' => 'Latitude',	
 		'tx_pmtour_tourpoints.longitude' => 'Longitude',	
+		'tx_pmtour_tourpoints.elevation' => 'Elevation',	
 		'tx_pmtour_tourpoints.description' => 'Description',	
 		'tx_pmtour_tourpoints.images' => 'Images',	
 		'tx_pmtour_tourpoints.tour' => 'Tour',	
@@ -43,4 +44,3 @@ $LOCAL_LANG = Array (
         'tt_content.list_type_pi1' => 'Tour', 		
 	),
 );
-?>

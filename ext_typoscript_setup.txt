@@ -1,12 +1,14 @@
 # Setup
-config.doctype = xhtml_strict
-config.xhtml_cleaning = output
-config.htmlTag_setParams = xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+#config.doctype = xhtml_strict
+#config.xhtml_cleaning = output
+#config.htmlTag_setParams = xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+
+page.includeCSS.file999 = EXT:pm_tour/pi1/res/defaultStyle.css
 
 plugin.tx_pmtour_pi1 {
 
   # template file
-  templateFile = EXT:pm_tour/pi1/res/template.tmpl  
+  templateFile = EXT:pm_tour/pi1/res/template.tmpl
   googleMap {
 	  key = 
 	  width=600px
@@ -19,6 +21,10 @@ plugin.tx_pmtour_pi1 {
   
   # encoding of the GPX files, used to convert from utf-8 to html encoding of html
   gpxEncoding = UTF-8
+#level 0 = tours only, 1 =  divided into countries, 2 = divided into regions and countries
+  listLevel = 2
+#Type 1 = SelectBox, 2 = <li>-list
+  listType = 2
   
   singleView {
   	tourname_stdWrap {
@@ -87,9 +93,13 @@ plugin.tx_pmtour_pi1 {
   		trackOpacity0 =
   		trackOpacity1 =
 	    defaultDatabaseMarkerIcon=EXT:pm_tour/pi1/res/image.png
-	    waypointSymbolIcons = Lodging|Bar|Restaurant|Fitness Center
-	    iconsWaypointsSymbols = EXT:pm_tour/pi1/res/bed.png|EXT:pm_tour/pi1/res/bar.png|EXT:pm_tour/pi1/res/restaurant.png|EXT:pm_tour/pi1/res/fitnesscenter.png
   	}
+  	googlemap_waypoints {
+  		restaurant = EXT:pm_tour/pi1/res/restaurant.png
+  		bar = EXT:pm_tour/pi1/res/bar.png
+   		lodging = EXT:pm_tour/pi1/res/bed.png
+  		fitnesscenter = EXT:pm_tour/pi1/res/fitnesscenter.png
+  	}  	
   	googlemap_stdWrap {
   		wrap = <p class="bodytext">|</p>
   	}
@@ -145,7 +155,7 @@ plugin.tx_pmtour_pi1 {
   	}
   	
   	elevation_stdWrap {
-  	    wrap = Hoehe:&nbsp;| m<br/>
+  	    wrap = Height:&nbsp;| m<br/>
   	}
   	
   	url_stdWrap {
@@ -189,5 +199,4 @@ plugin.tx_pmtour_pi1 {
   	}
   	
   }
-  
 }

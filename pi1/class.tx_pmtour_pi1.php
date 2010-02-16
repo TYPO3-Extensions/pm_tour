@@ -46,6 +46,8 @@ class tx_pmtour_pi1 extends tslib_pibase {
 	 * [Put your description here]
 	 */
 	function main($content,$conf)	{
+	
+
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
@@ -64,7 +66,12 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$subpartArray = array();
 			$wrappedSubpartArray = array();
 			$subpartArray['###COUNTRY###'] = $this->getCountries();
-			$content = $this->cObj->substituteMarkerArrayCached($this->templateItems["countrieslist"], $markerArray, $subpartArray, $wrappedSubpartArray);
+			$listType = $this->conf["listType"];
+			if($listType==1)
+				$templateItem="countriesselect";
+			elseif($listType==2)
+				$templateItem="countrieslist";
+			$content = $this->cObj->substituteMarkerArrayCached($this->templateItems[$templateItem], $markerArray, $subpartArray, $wrappedSubpartArray);
 		}
 
 		return $content;
@@ -75,7 +82,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 	 */
 	function singleView($uid) {
 		$this->initMap();
-		
+
 		$selectFields = "*";
 		$tables = "tx_pmtour_tour";
 		$where = "uid=".$uid." ".$this->cObj->enableFields("tx_pmtour_tour");	
@@ -226,24 +233,29 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		
 		//Waypoints		
 		$i = 0;			
-		$symbolsWithIcon = t3lib_div::trimExplode("|", "no|".$this->conf["singleView."]["googlemap."]["waypointSymbolsWithIcons"], 1);
-		$symbolIcons = t3lib_div::trimExplode("|", "no|".$this->conf["singleView."]["googlemap."]["waypointSymbolIcons"], 1);
-		reset($symbolsWithIcon);
+		$symbolIcons = $this->conf["singleView."]["googlemap_waypoints."];
 		reset($symbolIcons);
-		
+
+		$baseURL = "";
+		if(!empty($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']))
+			$baseURL = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'];
+
 		while (is_numeric($this->gpx->output["wpt".$i]["LON"])) {
 			$wpt = $this->gpx->output["wpt".$i++];
-			$index = array_search($wpt["SYM"],$symbolsWithIcon);
-		    if ($index) {
-			  $image = $GLOBALS['TSFE']->tmpl->getFileName($symbolIcons[$index]);
-		    } else {
-		      $image = null;	
-		    }
-			
+			$symbol = strtolower(str_replace(array(" ",","),"",$wpt["SYM"]));
+
+			if(array_key_exists($symbol,$symbolIcons) && file_exists($GLOBALS['TSFE']->tmpl->getFileName($symbolIcons[$symbol]))){
+				$image = $baseURL.$GLOBALS['TSFE']->tmpl->getFileName($symbolIcons[$symbol]);
+			}
+			else
+				$image = null;
+				
 			$html = $this->createMarkerPopupHtml($wpt,$image);
 			$hover = $html == null ? $wpt["NAME"] : $this->cObj->stdWrap($wpt["NAME"], $this->conf["marker."]["hoverPopupAvailable_stdWrap."]) ;
-			$this->gmap->addMarker(floatval($wpt["LAT"]),$wpt["LON"],$wpt["NAME"],$hover, $html, $image);
+			$this->gmap->addMarker(floatval($wpt["LAT"]),$wpt["LON"],$wpt["NAME"],$hover, $html, $image,null);
+		
 		}
+
 
 		//Markers Database with Images
 		$selectFields = "*";
@@ -260,7 +272,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 				$icons = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
 				foreach ($icons as $i=>$icon) {					 
 					if (strlen($icon["icon"])>0) {
-						$ico_n="uploads/tx_pmtour/".$icon["icon"];
+						$ico_n=$baseURL."uploads/tx_pmtour/".$icon["icon"];
 					}
 					if (strlen($icon["shadowicon"])>0) {
 						$ico_s="uploads/tx_pmtour/".$icon["shadowicon"];
@@ -273,6 +285,11 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$subpartArray = array();
 			$wrappedSubpartArray = array();
 			$markerArray['###TITLE###'] = $this->cObj->stdWrap($val["name"], $this->conf["marker."]["title_stdWrap."]);
+			if (strlen($val["elevation"])==0) {
+				$markerArray['###ELEVATION###'] = "";
+			} else {
+				$markerArray['###ELEVATION###'] = $this->cObj->stdWrap($val["elevation"], $this->conf["marker."]["elevation_stdWrap."]);
+			}
 			if (strlen($val["description"])==0) {
 				$markerArray['###DESCRIPTION###'] = "";
 			} else {
@@ -301,7 +318,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$html = $this->cObj->substituteMarkerArrayCached($this->templateItems["marker"],$markerArray,$subpartArray,$wrappedSubpartArray);
 			$html = str_replace("\n","",$html);
 			$html = str_replace("\r","",$html);
-			$this->gmap->addMarker(floatval($val["latitude"]),floatval($val["longitude"]),$html,$ico_n,$ico_s);
+			$this->gmap->addMarker(floatval($val["latitude"]),floatval($val["longitude"]),$icon["name"],$icon["name"],$html,$ico_n,$ico_s);
 		}
 
 		$GLOBALS['TSFE']->additionalHeaderData[$extKey."1"] = $this->gmap->getHeaderScript();
@@ -381,69 +398,106 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$pidList = $this->pi_getPidList($this->conf['pidList'],$this->conf['recursive']);
 		$selectFields = "uid, countryname";
 		$tables = "tx_pmtour_countries";
-		$where = "pid IN (".$this->cObj->data['pages'].") ".$this->cObj->enableFields("tx_pmtour_countries");	
-		$order = $this->conf["list."]["country_sort"];        
+		$listType = $this->conf["listType"];
+		if($listType==1)
+			$templateItem="select";
+		elseif($listType==2)
+			$templateItem="list";
+		$where = "pid IN (".$this->cObj->data['pages'].") ".$this->cObj->enableFields("tx_pmtour_countries");
+		$order = $this->conf["list."]["country_sort"];
 		$countries = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
 		foreach ($countries as $country=>$val) {
 			$markerArray = array();
 			$subpartArray = array();
 			$wrappedSubpartArray = array();
 			$markerArray['###COUNTRYNAME###'] = $this->cObj->stdWrap($val["countryname"], $this->conf["list."]["country_stdWrap."]);
-			$subpartArray['###REGION###'] = $this->getRegions($val["uid"]);
-			$content .= $this->cObj->substituteMarkerArrayCached($this->templateItems["list_country"],$markerArray,$subpartArray,$wrappedSubpartArray);
+			$subpartArray['###REGION###'] = $this->getRegions($val["uid"],$templateItem);
+			$content .= $this->cObj->substituteMarkerArrayCached($this->templateItems[$templateItem."_country"],$markerArray,$subpartArray,$wrappedSubpartArray);
 		}
 		return $this->cObj->stdWrap($content, $this->conf["list."]["countryList_stdWrap."]);
 	}
-	
-	function getRegions($country) {
+
+	function getRegions($country,$templateItem) {
 		$selectFields = "uid, regionname";
 		$tables = "tx_pmtour_regions";
+		$listLevel=$this->conf["listLevel"];
+
 		$where = "country=".$country." ".$this->cObj->enableFields("tx_pmtour_regions");	
-		$order = $this->conf["list."]["region_sort"];        
+		$order = $this->conf["list."]["region_sort"];    
 		$regions = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
+		$regionlist=array();
 		foreach ($regions as $region=>$val) {
+			array_push($regionlist, $val["uid"]);
+			if($listLevel==2){
+				// deep level => show tours per region
+				$markerArray = array();
+				$subpartArray = array();
+				$wrappedSubpartArray = array();
+				$markerArray['###REGIONNAME###'] = $this->cObj->stdWrap($val["regionname"], $this->conf["list."]["region_stdWrap."]);
+				$subpartArray['###TOUR###'] = $this->getToursForRegions($regionlist,$templateItem);
+				$content .= $this->cObj->substituteMarkerArrayCached($this->templateItems[$templateItem."_region"],$markerArray,$subpartArray,$wrappedSubpartArray);
+				$regionlist = array();
+			}
+		}
+		
+		if($listLevel==1){
+			// shallow level => show tours per country
 			$markerArray = array();
 			$subpartArray = array();
 			$wrappedSubpartArray = array();
-			$markerArray['###REGIONNAME###'] = $this->cObj->stdWrap($val["regionname"], $this->conf["list."]["region_stdWrap."]);
-			$subpartArray['###TOUR###'] = $this->getTours($val["uid"]);
-			$content .= $this->cObj->substituteMarkerArrayCached($this->templateItems["list_region"],$markerArray,$subpartArray,$wrappedSubpartArray);
+			$markerArray['###REGIONNAME###'] = "";
+			$subpartArray['###TOUR###'] = $this->getToursForRegions($regionlist,$templateItem);
+			$content .= $this->cObj->substituteMarkerArrayCached($this->templateItems[$templateItem."_region"],$markerArray,$subpartArray,$wrappedSubpartArray);
 		}
+
 		return $this->cObj->stdWrap($content, $this->conf["list."]["regionList_stdWrap."]);
 	}
 
-	function getTours($region) {
-		$selectFields = "uid, number, name, length_km, duration_h";
-		$tables = "tx_pmtour_tour";
-		$where = "region=".$region." ".$this->cObj->enableFields("tx_pmtour_tour");	
-		$order = $this->conf["list."]["tour_sort"];        
-		$tours = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
+	function getToursForRegions($regionlist,$templateItem) {
+		$subpartArray['###TOUR###'] = $this;
+		$selectTourFields = "uid, number, name, length_km, duration_h";
+		$tourTables = "tx_pmtour_tour";
+		$orderTour = $this->conf["list."]["tour_sort"];
+		$prefix=array("select"=>array(" - "," ; "),"list"=>array("",""));
+
+		$regions = implode(",",$regionlist);
+		$whereTour = "region IN (".$regions.") ".$this->cObj->enableFields("tx_pmtour_tour");
+		$tours = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectTourFields, $tourTables, $whereTour, null, $orderTour);
+
 		foreach ($tours as $tour=>$val) {
 			$markerArray = array();
 			$subpartArray = array();
 			$wrappedSubpartArray = array();
 			$markerArray['###TOURNAME###'] = $this->cObj->stdWrap($val["name"], $this->conf["list."]["tourname_stdWrap."]);
 			$markerArray['###TOURNUMBER###'] = $this->cObj->stdWrap($val["number"], $this->conf["list."]["tournumber_stdWrap."]);
-			$markerArray['###TOURLENGTH###'] = $this->cObj->stdWrap($val["length_km"], $this->conf["list."]["tourlength_stdWrap."]);
-			$markerArray['###TOURDURATION###'] = $this->cObj->stdWrap($val["duration_h"], $this->conf["list."]["tourduration_stdWrap."]);
+			$markerArray['###TOURLENGTH###'] = $this->cObj->stdWrap(strlen($val["length_km"])?$prefix[$templateItem][0].$val["length_km"]:"", $this->conf["list."]["tourlength_stdWrap."]);
+			$markerArray['###TOURDURATION###'] = $this->cObj->stdWrap(strlen($val["duration_h"])?$prefix[$templateItem][1].$val["duration_h"]:"", $this->conf["list."]["tourduration_stdWrap."]);
+			$markerArray['###VALUE###'] = $this->pi_linkTP_keepPIvars_url(array('pm_tour' => $val["uid"]), 0, 0, '');
 			$wrappedSubpartArray['###LINK_ITEM###'] = explode('|', $this->pi_linkTP_keepPIvars('|', array('pm_tour' => $val["uid"]), $this->allowCaching, 0, null));
-			$content .= $this->cObj->stdWrap($this->cObj->substituteMarkerArrayCached($this->templateItems["list_tour"],$markerArray,$subpartArray,$wrappedSubpartArray),$this->conf["list."]["tour_stdWrap."]);
+			$content .= $this->cObj->stdWrap($this->cObj->substituteMarkerArrayCached($this->templateItems[$templateItem."_tour"],$markerArray,$subpartArray,$wrappedSubpartArray),$this->conf["list."]["tour_stdWrap."]);
 		}
+		
 		return $this->cObj->stdWrap($content,$this->conf["list."]["tourList_stdWrap."]);
 	}
 
 	function initTemplate() {
-		// read template-file and fill and substitute the Global Markers
+		$listType = $this->conf["listType"];
 		$this->templateItems["all"] = $this->cObj->fileResource($this->conf['templateFile']);
-		$this->templateItems["countrieslist"] = $this->cObj->getSubpart($this->templateItems["all"],"###COUNTRIESLIST###"); 
-		$this->templateItems["list_country"] = $this->cObj->getSubpart($this->templateItems["countrieslist"],"###COUNTRY###");
-		$this->templateItems["list_region"] = $this->cObj->getSubpart($this->templateItems["countrieslist"],"###REGION###");
-		$this->templateItems["list_tour"] = $this->cObj->getSubpart($this->templateItems["countrieslist"],"###TOUR###");
+		if($listType==2){
+			$this->templateItems["countrieslist"] = $this->cObj->getSubpart($this->templateItems["all"],"###COUNTRIESLIST###");		
+			$this->templateItems["list_country"] = $this->cObj->getSubpart($this->templateItems["countrieslist"],"###COUNTRY###");
+			$this->templateItems["list_region"] = $this->cObj->getSubpart($this->templateItems["countrieslist"],"###REGION###");
+			$this->templateItems["list_tour"] = $this->cObj->getSubpart($this->templateItems["countrieslist"],"###TOUR###");
+		} elseif ($listType==1){
+			$this->templateItems["countriesselect"] = $this->cObj->getSubpart($this->templateItems["all"],"###COUNTRIESSELECT###");		
+			$this->templateItems["select_country"] = $this->cObj->getSubpart($this->templateItems["countriesselect"],"###COUNTRY###");
+			$this->templateItems["select_region"] = $this->cObj->getSubpart($this->templateItems["countriesselect"],"###REGION###");
+			$this->templateItems["select_tour"] = $this->cObj->getSubpart($this->templateItems["countriesselect"],"###TOUR###");
+		}
 		$this->templateItems["singleview"] = $this->cObj->getSubpart($this->templateItems["all"],"###SINGLEVIEW###"); 
 		$this->templateItems["altitudeprofile"] = $this->cObj->getSubpart($this->templateItems["singleview"],"###ALTITUDEPROFILE###"); 
-		$this->templateItems["marker"] = $this->cObj->getSubpart($this->templateItems["all"],"###MARKER###"); 
+		$this->templateItems["marker"] = $this->cObj->getSubpart($this->templateItems["all"],"###MARKER###");
 	}
-
 }
 
 
@@ -452,4 +506,3 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/pm_tour
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/pm_tour/pi1/class.tx_pmtour_pi1.php']);
 }
 
-?>

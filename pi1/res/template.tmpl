@@ -6,17 +6,31 @@
 ###TOURLENGTH###
 ###TOURDURATION###
 
+<!-- ###COUNTRIESSELECT### begin -->
+<!-- ###COUNTRY### begin -->
+<div class="pm_tours-select">
+###COUNTRYNAME###<!-- ###REGION### begin -->
+<div id="region">###REGIONNAME###
+<select onchange="parent.location.href=this.value">
+	<option value="javascript:parent.location.href=window.location">----</option>
+<!-- ###TOUR### begin --><option value=" ###VALUE### " > ###TOURNAME### ###TOURLENGTH### ###TOURDURATION###</option><!-- ###TOUR### end -->
+</select></div><!-- ###REGION### end -->
+</div>
+<!-- ###COUNTRY### end -->
+<!-- ###COUNTRIESSELECT### end -->
+
 <!-- ###COUNTRIESLIST### begin -->
 <!-- ###COUNTRY### begin -->
-###COUNTRYNAME###
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<div class="pm_tours-list">###COUNTRYNAME###
+<table class="pm_tours-table">
 	<!-- ###REGION### begin -->
-	<tr><td valign="top" width="20%"><b>###REGIONNAME###</b></td><td valign="top" width="80%"><table cellpadding="0" cellspacing="0" border="0" width="100%"><!-- ###TOUR### begin --><tr><td valign="top" class="bodytext" width="70%">###LINK_ITEM### ###TOURNAME### ###LINK_ITEM###</td><td valign="top" class="bodytext" width="15%">###TOURLENGTH###</td><td valign="top" class="bodytext" width="15%">###TOURDURATION###</td></tr><!-- ###TOUR### end --></table></td></tr>	
-	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td id="region" >###REGIONNAME###</td><td id="tours"><table id="tours"><!-- ###TOUR### begin --><tr><td id="tours">###LINK_ITEM### ###TOURNAME### ###LINK_ITEM###</td><td id="length">###TOURLENGTH###</td><td id="duration">###TOURDURATION###</td></tr><!-- ###TOUR### end --></table></td></tr>	
 	<!-- ###REGION### end -->
 </table>
+</div>
 <!-- ###COUNTRY### end -->
 <!-- ###COUNTRIESLIST### end -->
+
 
 
 ###TOURNAME###
@@ -31,54 +45,35 @@
 ###ALTITUDEPROFILE###
 
 <!-- ###SINGLEVIEW### begin -->
+<div class="pm_tours-single">
 ###TOURNAME###
 <table cellpadding="0" cellspacing="3" border="0" width="100%">
-	<tr valign="top">
-		<td colspan="2">&nbsp;</td>
-	</tr>	
-	<tr valign="top">
-		<td colspan="2" class="tourline">&nbsp;</td>
-	</tr>	
-	<tr valign="top">
-		<td width="20%"><b>Beschreibung:</b></td>
-		<td width="80%">###TOURDESCRIPTION###</td>
-	</tr>
-	<tr valign="top">
-		<td colspan="2" class="tourline">&nbsp;</td>
-	</tr>	
-	<tr valign="middle">
-		<td><b>Länge:</p></td>
-		<td>###TOURLENGTH###</td>
-	</tr>
-	<tr valign="top">
-		<td colspan="2" class="tourline">&nbsp;</td>
-	</tr>	
-	<tr valign="middle">
-		<td><b>Dauer:</b></td>
-		<td>###TOURDURATION###</td>
-	</tr>
-	<tr valign="top">
-		<td colspan="2" class="tourline">&nbsp;</td>
+	<tr>
+		<td id="head">Beschreibung:</td>
+		<td id="data">###TOURDESCRIPTION###</td>
 	</tr>
 	<tr>
-		<td valign="top"><b>Bilder:</b></td>
-		<td>###TOURIMAGES###</td>
+		<td id="head">Länge:</td>
+		<td id="data">###TOURLENGTH###</td>
 	</tr>
-	<tr valign="top">
-		<td colspan="2" class="tourline">&nbsp;</td>
+	<tr>
+		<td id="head">Dauer:</td>
+		<td id="data">###TOURDURATION###</td>
 	</tr>
-	<tr valign="top">
-		<td><b>GPX Datei:</b></td>
-		<td>###GPXFILE###</td>
+	<tr>
+		<td id="head">Bilder:</td>
+		<td id="data">###TOURIMAGES###</td>
+	</tr>
+	<tr>
+		<td id="head">GPX Datei:</td>
+		<td id="data">###GPXFILE###</td>
 	</tr>	
-	<tr valign="top">
-		<td colspan="2" class="tourline">&nbsp;</td>
-	</tr>
-	<tr valign="top">
+	<tr id="googlemap">
 		<td colspan="2">###GOOGLEMAP###</td>
 	</tr>
-    <tr valign="top">
-		<td><b>Anzeigefilter:</b></td><td>###POINTFILTER###</td>
+    <tr>
+		<td id="filterhead">Anzeigefilter:</td>
+		<td id="filter">###POINTFILTER###</td>
 	</tr>
 	<!-- ###ALTITUDEPROFILESUBPART### -->
 	<!-- ###ALTITUDEPROFILE### -->
@@ -90,10 +85,11 @@
 	</tr>
 	<!-- ###ALTITUDEPROFILE### -->
 	<!-- ###ALTITUDEPROFILESUBPART### -->	
-	<tr valign="top">
-		<td align="right" colspan="2"><p class="bodytext"><a href="javascript:history.go(-1);">« zurück</a></p></td>
+	<tr>
+		<td id="back" colspan="2"><a href="javascript:history.go(-1);">« zurück</a></td>
 	</tr>
 </table>
+</div>
 
 <!-- ###SINGLEVIEW### end -->
 ###TITLE###

@@ -115,7 +115,7 @@ $TCA["tx_pmtour_tourpoints"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_pmtour_tourpoints.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, latitude, longitude, description, images, url, tour, icon",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, name, latitude, longitude, elevation, description, images, url, tour, icon",
 	)
 );
 

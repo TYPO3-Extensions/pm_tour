@@ -448,7 +448,7 @@ $TCA["tx_pmtour_tour"] = Array (
 $TCA["tx_pmtour_tourpoints"] = Array (
 	"ctrl" => $TCA["tx_pmtour_tourpoints"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,latitude,longitude,description,images,url,tour,icon"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,name,latitude,longitude,elevation,description,images,url,tour,icon"
 	),
 	"feInterface" => $TCA["tx_pmtour_tourpoints"]["feInterface"],
 	"columns" => Array (
@@ -516,6 +516,15 @@ $TCA["tx_pmtour_tourpoints"] = Array (
 				"type" => "input",	
 				"size" => "30",	
 				"eval" => "required",
+			)
+		),
+		"elevation" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:pm_tour/locallang_db.php:tx_pmtour_tourpoints.elevation",		
+			"config" => Array (
+				"type" => "input",	
+				"size" => "30",	
+				"eval" => "trim",
 			)
 		),
 		"description" => Array (		
@@ -651,7 +660,7 @@ $TCA["tx_pmtour_tourpoints"] = Array (
         ),        
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, latitude, longitude, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], images, url, tour, icon")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, latitude, longitude, elevation, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], images, url, tour, icon")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -720,4 +729,3 @@ $TCA["tx_pmtour_icons"] = Array (
         "1" => Array("showitem" => "")
     )
 );
-?>
