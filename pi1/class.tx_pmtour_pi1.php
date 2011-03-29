@@ -35,6 +35,7 @@ require_once(t3lib_extMgm::extPath('pm_tour').'pi1/class.tx_pmtour_googleMapAPI_
 require_once(t3lib_extMgm::extPath('pm_tour').'pi1/class.tx_pmtour_gpxParser.php'); 
 require_once(t3lib_extMgm::extPath('pm_tour').'pi1/class.tx_pmtour_googleChart.php');
 require_once(t3lib_extMgm::extPath('pm_tour').'pi1/class.tx_pmtour_altitude.php');
+require_once(t3lib_extMgm::extPath('pm_tour').'pi1/class.tx_pmtour_geotagging.php');
 
 class tx_pmtour_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_pmtour_pi1';		// Same as class name
@@ -118,6 +119,15 @@ class tx_pmtour_pi1 extends tslib_pibase {
 				  	$l["stdWrap."]["typolink."]["title"] = $imgTitle;
 				  }
 				}
+				
+				if($this->conf["singleView."]["geotagging"] == 1 && function_exists('exif_read_data')){
+					$this->geotag = new tx_pmtour_geotagging($l, $this->cObj, $this->conf, $this->templateItems);
+					if(is_numeric($this->geotag->output["Lat"]))
+						$this->gmap->addMarker(floatval($this->geotag->output["Lat"]),floatval($this->geotag->output["Lon"]),$this->geotag->output["Title"],$this->geotag->output["Hover"],$this->geotag->output["Html"],$this->geotag->output["Ico_n"],$this->geotag->output["Ico_s"]);
+				}
+				if(!function_exists('exif_read_data'))
+					echo "Function exif_read_data() not available";
+					
 				array_push($this->imageTags, $this->cObj->IMAGE($l));	
 			}			
 			$imageHtml = implode("",$this->imageTags);
