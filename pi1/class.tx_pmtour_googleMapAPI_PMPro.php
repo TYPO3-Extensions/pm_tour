@@ -47,13 +47,6 @@ class tx_pmtour_googleMapAPI_PMPro {
 	var $map_type = "G_MAP_TYPE";
 	var $markers = array();
 	var $polylines = array();
-	var $max_lon = -1000000;
-	var $min_lon = 1000000;
-	var $max_lat = -1000000;
-	var $min_lat = 1000000;
-	var $center_lat = 46.77429;
-	var $center_lon = 7.57164;
-	var $start_filter = 1;
 	
 		
 	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type="map", $layerIds=null, $layerNames=null) {
@@ -82,17 +75,6 @@ class tx_pmtour_googleMapAPI_PMPro {
 		return true;
 	}
 	
-	function setStartFilter($filter) {
-		if (is_numeric($filter)){
-			if ($filter > 0) {
-				$this->start_filter=$filter;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
 	function setTitle($title) {
 		$this->title=$title;
 	}
@@ -138,12 +120,6 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$this->markers = array();
 		$this->polylines = array();
 		$this->title ="";
-		$this->max_lon = -1000000;
-		$this->min_lon = 1000000;
-		$this->max_lat = -1000000;
-		$this->min_lat = 1000000;
-		$this->center_lat = 46.77429;
-		$this->center_lon = 7.57164;
 	}
 	
 	function addMarker($lat, $lon, $title, $hover, $html = '', $iconImage = '', $iconShadowImage = '') {
@@ -184,7 +160,6 @@ class tx_pmtour_googleMapAPI_PMPro {
 			$marker['icon'] = $icon_info;
 		}
 		$this->markers[] = $marker;
-		$this->adjustCenterCoords($marker['lon'], $marker['lat']);
 		return count($this->markers) - 1;
 	}
 	
@@ -201,23 +176,8 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$pt["lat"] = $lat;
 		$pt["lon"] = $lon;
 		$this->polylines[$polyline]["points"][] = $pt;
-		$this->adjustCenterCoords($pt['lon'], $pt['lat']);
 		return count($this->polylines[$polyline]["points"]) - 1;
 	}
-	
-	function adjustCenterCoords($lon, $lat) {
-		if (strlen((string)$lon) == 0 || strlen((string)$lat) == 0) {
-			return false;
-		}
-		$this->max_lon = max($lon, $this->max_lon);
-		$this->min_lon = min($lon, $this->min_lon);
-		$this->max_lat = max($lat, $this->max_lat);
-		$this->min_lat = min($lat, $this->min_lat);
-		$this->center_lon = ($this->min_lon + $this->max_lon) / 2;
-		$this->center_lat = ($this->min_lat + $this->max_lat) / 2;
-		return true;
-	}	
-
 	
 	function getHeaderScript() {
 		$ret .= $this->addLine('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=%s"></script>');
@@ -225,19 +185,14 @@ class tx_pmtour_googleMapAPI_PMPro {
 		return sprintf($ret, $this->api_key);
 	}
 	
-	 
-	function getShowFullScreenLink($title) {
-		// use $this->map_id if supporting several maps becomes necessary
-		return '<a href="javascript: tourmap.show_fullscreen();">'.$title.'</a>';
-	}
-	
 	function getContentElement() {
 		$mapname = $this->map_id;
 		$markersname = $this->map_id."markers";
 		$iconsname = $this->map_id."icons";
 		$polylinesname = $this->map_id."polylines";
-		//Div
-		$ret .= $this->addLine(sprintf('<div id="%s" style="width: %s; height: %s"></div>',$this->map_id, $this->width, $this->height));
+		// create div ...
+		$ret .= $this->addLine(sprintf('<div id="%s"></div>',$this->map_id));
+		// ... and map spec in javascript
 		$ret .= $this->addLine('<script type="text/javascript">');
 		$ret .= $this->addLine(sprintf("pmtourmap.map_specs['%s'] =  {", $this->map_id),2);
 		$ret .= $this->addLine("title:'" . $this->title . "',", 3);

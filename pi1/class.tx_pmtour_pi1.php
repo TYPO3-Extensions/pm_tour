@@ -90,7 +90,6 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$order = $this->conf["list."]["tour_sort"];   
 		$tours = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
 		foreach ($tours as $tour=>$val) {
-			$this->gmap->setStartFilter(intval($val["showfilter"]));
 			$this->gmap->setTitle($val["name"]);
 		
 			$markerArray = array();
