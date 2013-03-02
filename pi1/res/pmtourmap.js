@@ -122,6 +122,7 @@ pmtourmap = function() {
 
 		var set_map_size_embedded = function() {
 			that.map_div.setAttribute("style", "width:"+map_spec.width+";height: "+map_spec.height+";");
+			that.map_div.setAttribute("class", "embedded");
 		}
 		
 		/* creating divs with plain javascript */
