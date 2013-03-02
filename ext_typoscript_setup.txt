@@ -103,20 +103,6 @@ plugin.tx_pmtour_pi1 {
   	googlemap_stdWrap {
   		wrap = <p class="bodytext">|</p>
   	}
-  	pointFilter {
-  		divider = &nbsp;|&nbsp;
-  		data = 1|2|4|8|16|32
-  		display = jeden|jeden 2.|jeden 4.|jeden 8.|jeden 16.|jeden 32.
-  	}
-  	pointFilter_stdWrap {
-  		wrap = <p class="bodytext">Zeige&nbsp; | &nbsp;Punkt.</p>
-  	}
-  	pointFilterItem_stdWrap {
-  		
-  	}
-  	pointFilterItemSelected_stdWrap {
-  		wrap = <b>|</b>
-  	}
 
   }
   
