@@ -91,6 +91,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$tours = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
 		foreach ($tours as $tour=>$val) {
 			$this->gmap->setStartFilter(intval($val["showfilter"]));
+			$this->gmap->setTitle($val["name"]);
 		
 			$markerArray = array();
 			$subpartArray = array();
@@ -141,7 +142,9 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			} else {
 				$markerArray['###GOOGLEMAP###'] = "";
 			}			
-			$markerArray['###POINTFILTER###'] = $this->cObj->stdWrap($this->getPointFilterList($val["uid"]), $this->conf["singleView."]["pointFilter_stdWrap."]);
+			// TODO replace pointfilter with fullscreen
+			$markerArray['###POINTFILTER###'] =  $this->gmap->getShowFullScreenLink("Show Fullscreen");
+			//$markerArray['###POINTFILTER###'] = $this->cObj->stdWrap($this->getPointFilterList($val["uid"]), $this->conf["singleView."]["pointFilter_stdWrap."]);
 			if ($val["showaltitudeprofile"]) {
 				// TODO: make sure gpx exists (can not if googleMap.visible is 0)
 				$altitude = new tx_pmtour_altitude($this->gpx) ;
@@ -166,6 +169,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 	}
 	
 	function getPointFilterList($uid) {	
+		/* TODO REMOVE
 		$data = explode("|",$this->conf["singleView."]["pointFilter."]["data"]);	
 		$display = explode("|",$this->conf["singleView."]["pointFilter."]["display"]);	
 		for ($i=0; $i<sizeof($data); $i++) {
@@ -174,7 +178,8 @@ class tx_pmtour_pi1 extends tslib_pibase {
 				$content .= $this->conf["singleView."]["pointFilter."]["divider"];
 			}
 		}
-		return $content;
+		*/
+		return "";
 	}
 	
 	function drawMap($uid, $gpxfile, $tour) {

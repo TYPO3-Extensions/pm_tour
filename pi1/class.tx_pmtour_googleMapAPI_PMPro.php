@@ -93,6 +93,9 @@ class tx_pmtour_googleMapAPI_PMPro {
 			return false;
 		}
 	}
+	function setTitle($title) {
+		$this->title=$title;
+	}
 
 	function setHeight($height) {
 		if (!preg_match('!^(\d+)(.*)$!', $height,$_match)) {
@@ -134,6 +137,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 	function clear() {
 		$this->markers = array();
 		$this->polylines = array();
+		$this->title ="";
 		$this->max_lon = -1000000;
 		$this->min_lon = 1000000;
 		$this->max_lat = -1000000;
@@ -216,24 +220,15 @@ class tx_pmtour_googleMapAPI_PMPro {
 
 	
 	function getHeaderScript() {
-		$ret .= $this->addLine('<script src="http://maps.google.com/maps?file=api&v=2&key=%s" charset="utf-8"></script>');
-	    $ret .= $this->addLine('<script type="text/javascript">');
-		$ret .= $this->addLine('/*<![CDATA[*/',1);
-		$ret .= $this->addLine('<!--',1);	
-		$ret .= $this->addLine('window.onunload = GUnload;',1);
-		$ret .= $this->addLine('document.onunload = GUnload;',1);
-		$ret .= $this->addLine('// -->',1);
-		$ret .= $this->addLine('/*]]>*/',1);
-		$ret .= $this->addLine('</script>');
-		if ($this->isUsingLayers()) {
-			$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/LayerControl.js" type="text/javascript"></script>';
-		}		
+		$ret .= $this->addLine('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=%s"></script>');
+		$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/pmtourmap.js" type="text/javascript"></script>';
 		return sprintf($ret, $this->api_key);
 	}
 	
 	 
-	function getDrawFilterLink($filter,$title) {
-		return '<a href="javascript: draw_overlays_'.$this->map_id.'('.$filter.');">'.$title.'</a>';
+	function getShowFullScreenLink($title) {
+		// use $this->map_id if supporting several maps becomes necessary
+		return '<a href="javascript: tourmap.show_fullscreen();">'.$title.'</a>';
 	}
 	
 	function getContentElement() {
@@ -244,24 +239,25 @@ class tx_pmtour_googleMapAPI_PMPro {
 		//Div
 		$ret .= $this->addLine(sprintf('<div id="%s" style="width: %s; height: %s"></div>',$this->map_id, $this->width, $this->height));
 		$ret .= $this->addLine('<script type="text/javascript">');
-		$ret .= $this->addLine('/*<![CDATA[*/',1);
-		$ret .= $this->addLine('<!--',1);	
-		//Initializing
-		$ret .= $this->addLine(sprintf('var %s = null;',$mapname),2);	
-		$ret .= $this->addLine(sprintf('var %s = Array();',$markersname),2);
-		$ret .= $this->addLine(sprintf('var %s = Array();',$iconsname),2);
-		$ret .= $this->addLine(sprintf('var %s = Array();',$polylinesname),2);
-		$ret .= $this->addLine();
+		$ret .= $this->addLine(sprintf("pmtourmap.map_specs['%s'] =  {", $this->map_id),2);
+		$ret .= $this->addLine("title:'" . $this->title . "',", 3);
+		$ret .= $this->addLine("width:'" . $this->width . "',", 3);
+		$ret .= $this->addLine("height:'" . $this->height . "',", 3);
+		
 		
 		//Create Markers
-		$ret .= $this->addLine(sprintf('function create_markers_%s() {', $this->map_id),2);
+		$ret .= $this->addLine('waypoints: [', 3);
 		$i=0;
 		$icons = array();
 		foreach($this->markers as $marker) {
+			if ($i > 0) {
+				$ret .= $this->addLine(",",4);
+			}
+			$ret .= $this->addLine('{ // start waypoint',4);
 			$gmarkeroptions = array(); // java script options, e.g. {title:"My Way Point",icon:mapa390e50e2d0c7fc8f27e2ea71a559d5aicons['0']}
 			if ($marker["icon"]) {
 				$icon = $icons[$marker["icon"]["image"].$marker["icon"]["shadow"]];
-				
+				/*
 				if (!is_numeric($icon)) {
 					$icon = count($icons);
 					$icons[$marker["icon"]["image"].$marker["icon"]["shadow"]] = $icon;
@@ -275,80 +271,52 @@ class tx_pmtour_googleMapAPI_PMPro {
 					$ret .= $this->addLine(sprintf('%s['.$icon.'].iconAnchor = new GPoint(%s, %s);', $iconsname, $marker["icon"]["iconAnchorX"], $marker["icon"]["iconAnchorY"]),3);
 					$ret .= $this->addLine(sprintf('%s['.$icon.'].infoWindowAnchor = new GPoint(%s, %s);', $iconsname, $marker["icon"]["infoWindowAnchorX"], $marker["icon"]["infoWindowAnchorY"]),3);
 				}
-				array_push($gmarkeroptions, "icon:".$iconsname."['".$icon."']");
+				*/
+				array_push($gmarkeroptions, "icon:'".$marker["icon"]["image"]."'");
 			}
 			array_push($gmarkeroptions, "title:'".$marker["hover"]."'");
-			$ret .= $this->addLine(sprintf('%s['.$i.'] = new GMarker(new GLatLng(%s,%s),{%s});',$markersname, $marker["lat"], $marker["lon"], implode(",",$gmarkeroptions)), 3);
+			array_push($gmarkeroptions, "lat:".$marker["lat"]."");
+			array_push($gmarkeroptions, "lng:".$marker["lon"]."");
 			if ($marker["html"] != null) {
 				$html = str_replace("'","\'",$marker["html"]);
+				array_push($gmarkeroptions, "popup_html:'".$html."'");
 				// without setting maxWidth the popup window can become quite broad, so that the user must pan the map to reach the close button
-				$ret .= $this->addLine(sprintf('GEvent.addListener(%s['.$i.'], "click", function() { %s['.$i.'].openInfoWindowHtml(\'%s\',{maxWidth:'.($this->width-100).'}); });',$markersname,$markersname,$html),3);
+				// todo: set maxWidth of popup_html to $this->width-100)
 			}
+			$ret .= $this->addLine(implode(",",$gmarkeroptions),5);
+			$ret .= $this->addLine('}// end waypoint',4);
 			$i++;
 		}
-		$ret .= $this->addLine('}',2);
-		$ret .= $this->addLine();
-
-		//Create PolyLines
-		$ret .= $this->addLine(sprintf('function create_polylines_%s() {', $this->map_id),2);
+		$ret .= $this->addLine('], // end waypoints', 3);
+		
+		$ret .= $this->addLine('tracks: [', 3);
 		$i=0;
 		$icons = array();
 		foreach($this->polylines as $polyline) {
-			$ret .= $this->addLine(sprintf('%s['.$i.'] = Array();',$polylinesname),3);
 			$j=0;
+			$points = "[";
 			foreach($polyline["points"] as $point) {
-				$ret .= $this->addLine(sprintf('%s['.$i.']['.$j.'] = new GLatLng(%s,%s);',$polylinesname, $point["lat"], $point["lon"]),3);
+				if ($j > 0) {
+					$points .= ",";
+				}
+				$points .= '['.$point["lat"].','.$point["lon"]."]";
 				$j++;
 			}
+			$points .= "],";
+			$properties = 'strokeColor:"'.$polyline["color"].'", strokeWeight:'.$polyline["weight"].", strokeOpacity:".$polyline["opacity"]/100;
+			if ($i > 0) {
+				$ret .= $this->addLine(",",4);
+			}
+			$ret .= $this->addLine("{", 4);
+			$ret .= $this->addLine("points: ".$points, 5);
+			$ret .= $this->addLine("properties: {".$properties."}", 5);
+			$ret .= $this->addLine("} // end track", 4);
 			$i++;
 		}
-		$ret .= $this->addLine('}',2);
-		$ret .= $this->addLine();
-
-		//Draw Overlays
-		$ret .= $this->addLine(sprintf('function draw_overlays_%s(filter) {', $this->map_id),2);
-		$ret .= $this->addLine(sprintf('%s.clearOverlays();',$mapname),3);	
-		$ret .= $this->addLine(sprintf('for (var i=0; i<%s.length; i++) {', $markersname),3);
-		$ret .= $this->addLine(sprintf('%s.addOverlay(%s[i]);', $mapname, $markersname),4);
-		$ret .= $this->addLine('}',3);
-		$i=0;
-		foreach($this->polylines as $polyline) {				
-			$ret .= $this->addLine(sprintf('for (var i=filter; i<%s['.$i.'].length-2; i=i+filter) {', $polylinesname),3);
-			$ret .= $this->addLine(sprintf('%s.addOverlay(new GPolyline([%s['.$i.'][i-filter],%s['.$i.'][i]], "%s", %s, %s));', $mapname, $polylinesname, $polylinesname, $polyline["color"], $polyline["weight"], $polyline["opacity"]/100),4);
-			$ret .= $this->addLine('}',3);
-			$ret .= $this->addLine(sprintf('if (i-filter != %s['.$i.'].length-1){', $polylinesname),3);
-			$ret .= $this->addLine(sprintf('%s.addOverlay(new GPolyline([%s['.$i.'][i-filter],%s['.$i.'][%s['.$i.'].length-1]], "%s", %s, %s));', $mapname, $polylinesname, $polylinesname, $polylinesname, $polyline["color"], $polyline["weight"], $polyline["opacity"]/100),4);
-			$ret .= $this->addLine('}',3);
-			$i++;
-		}
-		$ret .= $this->addLine('}',2);
-		$ret .= $this->addLine();
 		
-		//Loading
-		$ret .= $this->createLayerControl();
-		$ret .= $this->addLine(sprintf('function load_%s() {', $this->map_id),2);		
-		$ret .= $this->addLine(sprintf('%s = new GMap2(document.getElementById("%s"));',$mapname,$this->map_id),3);
-		$ret .= $this->addLine(sprintf('%s.addControl(new GLargeMapControl());',$mapname),3);
-		$ret .= $this->addLine(sprintf('%s.addControl(new GMapTypeControl());',$mapname),3);
-		$ret .= $this->createMoreControl($mapname);
-		$ret .= $this->addLine(sprintf('%s.setCenter(new GLatLng(%s,%s), 10);',$mapname, $this->center_lat,$this->center_lon),3);	
-		$ret .= $this->addLine(sprintf('var zoom = %s.getBoundsZoomLevel(new GLatLngBounds(new GLatLng(%s,%s),new GLatLng(%s,%s)));',$mapname,$this->min_lat,$this->min_lon,$this->max_lat,$this->max_lon),3);	
-		$ret .= $this->addLine(sprintf('%s.setCenter(new GLatLng(%s,%s), zoom);',$mapname, $this->center_lat,$this->center_lon),3);	
-		$ret .= $this->addLine(sprintf('%s.setMapType(%s);',$mapname,$this->map_type),3);						
-		$ret .= $this->addLine(sprintf('create_markers_%s();', $this->map_id),3);		
-		$ret .= $this->addLine(sprintf('create_polylines_%s();', $this->map_id),3);		
-		$ret .= $this->addLine(sprintf('draw_overlays_%s(%s);', $this->map_id, $this->start_filter),3);
-		$ret .= $this->addLine('}',2);
-		$ret .= $this->addLine();
+		$ret .= $this->addLine('] // end tracks', 3);
+		$ret .= $this->addLine('}; // end map_spec',2);
 		
-		//Running
-		$ret .= $this->addLine('if (GBrowserIsCompatible()) {',2);
-		$ret .= $this->addLine(sprintf('setTimeout(load_%s,500);', $this->map_id),3);
-		$ret .= $this->addLine('} else {',2);
-		$ret .= $this->addLine('document.write(\'<b>Javascript must be enabled in order to use Google Maps.</b>\');',3);
-		$ret .= $this->addLine('}',2);
-		$ret .= $this->addLine('// -->',1);
-		$ret .= $this->addLine('/*]]>*/',1);
 		$ret .= $this->addLine('</script>');
 		return $ret;
 	}	

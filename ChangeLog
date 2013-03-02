@@ -1,3 +1,11 @@
+2013 not yet released
+	* switch to google maps v3
+	* fullscreen mode
+TODO: 
+ * specify layers
+ * update docs
+ * remove unnecessary code
+
 10-03-29 0.0.14
 	* added geotagging for images
 
