@@ -1,5 +1,4 @@
-<!DOCTYPE html
-	PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -7,6 +6,7 @@
 	<link media="screen" type="text/css" href="../../pi1/res/defaultStyle.css" rel="stylesheet">
 	
 	<title>PM Tour static</title>
+	<script type="text/javascript" src="../../pi1/res/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyDVtbhNpfSkCZO79SmU4BVOvE2OwUDnFBA"></script>
 	<script type="text/javascript" src="../../pi1/res/pmtourmap.js"></script>
 	<script type="text/javascript">
@@ -25,11 +25,11 @@
 							lat : 50.2029550,
 							lng : 8.5152650,
 							title : 'Bembel',
-							popup_html : "<b>Bembel</b><br>Height:&nbsp;381m<br><p class=\"bodytext\">06-JUL-08 18:33:16<br></p><a target=\"thePicture\" onclick=\"openPic('../resources/bembel.jpg','dba6d17f42a65f6752878b345270abc0','width=1041,height=788,status=0,menubar=0'); return false;\" href=\"index.php?eID=tx_cms_showpic&amp;file=uploads%2Ftx_pmtour%2FBembelpause_01.JPG&amp;width=1280m&amp;height=800&amp;bodyTag=%3Cbody%20bgColor%3D%22%23ffffff%22%3E&amp;wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&amp;md5=27b15bb840a97662206230da8f246b96\"><img width=\"133\" height=\"100\" border=\"0\" title=\"\" alt=\"\" src=\"../resources/bembel.jpg\"></a>",
+							popup_html : "<b>Bembel</b><br>Height:&nbsp;381m<br><p class=\"bodytext\">06-JUL-08 18:33:16<br></p><a target=\"thePicture\" onclick=\"openPic('../resources/bembel.jpg','dba6d17f42a65f6752878b345270abc0','width=1041,height=788,status=0,menubar=0'); return false;\" href=\"index.php?eID=tx_cms_showpic&amp;file=uploads%2Ftx_pmtour%2FBembelpause_01.JPG&amp;width=1280m&amp;height=800&amp;bodyTag=%3Cbody%20bgColor%3D%22%23ffffff%22%3E&amp;wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&amp;md5=27b15bb840a97662206230da8f246b96\"><img width=\"133\" height=\"100\" border=\"0\" title=\"\" alt=\"\" src=\"../resources/bembel.jpg\"></a>"
 						}, {
 							lat : 50.2041130,
 							lng : 8.4537060,
-							title : 'Eichendorffstein',
+							title : 'Eichendorffstein'
 						}, {
 							lat : 50.21,
 							lng : 8.3537,
@@ -488,7 +488,7 @@
 						</tr>
 						<tr id="googlemap">
 							<td colspan="2">
-							    <div id="my_map" class="embedded"></div>
+							    <div id="my_map"></div>
 								</td>
 								
 						</tr>

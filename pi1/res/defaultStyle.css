@@ -162,4 +162,9 @@
 	float: right;
 	margin-right: 15px;
 	margin-top:5px;
-}		
+}
+
+/* no blue borders in IE around images*/
+a > img {
+    border: 0;
+}

@@ -180,6 +180,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 	}
 	
 	function getHeaderScript() {
+		$ret .= $this->addLine('<script type="text/javascript" src="typo3conf/ext/pm_tour/pi1/res/jquery-1.9.1.min.js"></script>');
 		$ret .= $this->addLine('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=%s"></script>');
 		$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/pmtourmap.js" type="text/javascript"></script>';
 		return sprintf($ret, $this->api_key);

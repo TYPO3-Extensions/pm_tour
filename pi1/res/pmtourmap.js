@@ -62,7 +62,9 @@ pmtourmap = function() {
 		};
 
 		var create_markers = function() {
-			map_spec.waypoints.map(create_marker)
+			for (var marker in map_spec.waypoints) {
+				create_marker(map_spec.waypoints[marker])
+			}
 		}
 
 		var create_marker = function(waypoint) {
@@ -88,19 +90,22 @@ pmtourmap = function() {
 		}
 
 		var create_polylines = function() {
-			map_spec.tracks.map(create_polyline);
+			for (var marker in map_spec.tracks) {
+				create_polyline(map_spec.tracks[marker])
+			}
 		}
 
 		var create_polyline = function(track) {
 			var path = [], latlng;
-			(track.points || []).map(function(point) {
+			var points = track.points || [];
+			for (var i=0; i<points.length; i++) {
+				var point = points[i];
 				if (point.length != 2) {
 					errors.push("invalid track point " + point);
 				} else {
 					path.push(create_latlng(point[0], point[1]));
 				}
-			});
-			;
+			}
 			var polyline = new google.maps.Polyline(extend({
 				path : path
 			}, track.properties));
@@ -121,11 +126,13 @@ pmtourmap = function() {
 		};
 
 		var set_map_size_embedded = function() {
-			that.map_div.setAttribute("style", "width:"+map_spec.width+";height: "+map_spec.height+";");
-			that.map_div.setAttribute("class", "embedded");
+			that.map_div.style.height=map_spec.height;
+			that.map_div.style.width=map_spec.width;
+			$(that.map_div).removeClass("fullscreen").addClass("embedded");
 		}
 		
-		/* creating divs with plain javascript */
+		/* creating divs with plain javascript
+		 * that was before jquery was added, please rewrite */
 		var create_map_div = function() {
 			var new_div = document.createElement("div");
 			new_div.setAttribute("id", map_id);
@@ -149,22 +156,14 @@ pmtourmap = function() {
 		};
 
 		var create_map_toolbar_div = function() {
-			var new_toolbar = document.createElement("div");
-			that.map_div.parentNode.insertBefore(new_toolbar,
-					that.map_div.nextSibling);
-			new_toolbar.setAttribute("class", "map_toolbar");
-			new_toolbar.setAttribute("style", "width: "+map_spec.width);
-			var title_span = document.createElement("span");
-			new_toolbar.appendChild(title_span);
-			title_span.appendChild(document.createTextNode(map_spec.title));
-			var a = document.createElement("a");
-			a.setAttribute("href", "javascript:pmtourmap.show_fullscreen('"
-					+ map_id + "');");
-			new_toolbar.appendChild(a)
-			var img = document.createElement("img");
-			a.appendChild(img);
-			img.setAttribute("src", map_spec.image_folder + "/fullscreen.png")
-			img.setAttribute("title", map_spec.fullscreen_show_text);
+			var href= "javascript:pmtourmap.show_fullscreen('"+ map_id + "');";
+			var src = map_spec.image_folder + "/fullscreen.png";
+			var title =  map_spec.fullscreen_show_text;
+			var style = "width: " + map_spec.width +";";
+			// the a element should be on the right side. In order to make IE not
+			// insert a new line it is inserted before the non-floating span.
+			var html = '<div class="map_toolbar" style="'+style+'"><a href="'+href+'"><img src="'+src+'" title="'+title+'"></a><span>'+map_spec.title+'</span></div>';
+			$(that.map_div).after(html);
 		}
 
 		that = {
@@ -176,18 +175,17 @@ pmtourmap = function() {
 			that.fullscreen_background_div = document
 					.getElementById(map_spec.fullscreen_background_div_id)
 					|| create_fullscreen_div();
-			that.map_div.setAttribute("class", "fullscreen");
-			that.map_div.removeAttribute("style");
+			$(that.map_div).removeClass("embedded").addClass("fullscreen");
+			$(that.map_div).removeAttr("style");
 			google.maps.event.trigger(that.map, 'resize');
-			that.fullscreen_background_div.setAttribute("class", "visible");
+			$(that.fullscreen_background_div).removeClass("hidden").addClass("visible");
 			fitBounds();
 		};
 
 		that.exit_fullscreen = function() {
-			that.map_div.setAttribute("class", "embedded");
 			set_map_size_embedded();
 			google.maps.event.trigger(that.map, 'resize');
-			that.fullscreen_background_div.setAttribute("class", "hidden");
+			$(that.fullscreen_background_div).removeClass("visible").addClass("hidden");
 			fitBounds();
 		};
 
@@ -199,7 +197,6 @@ pmtourmap = function() {
 	var /* private */create_maps = function() {
 		for ( var map_id in namespace.map_specs) {
 			var map_spec = namespace.map_specs[map_id];
-			console.log(map_id);
 			id_to_map[map_id] = create_map(map_id, map_spec);
 		}
 	}
