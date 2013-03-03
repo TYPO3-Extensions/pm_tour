@@ -152,6 +152,7 @@ pmtourmap = function() {
 			a.appendChild(img);
 			img.setAttribute("src", map_spec.image_folder + "/close.png")
 			img.setAttribute("title", map_spec.fullscreen_exit_text);
+			$(new_div).click(function() {that.exit_fullscreen()});
 			return new_div;
 		};
 

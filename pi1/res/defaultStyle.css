@@ -120,11 +120,11 @@
 .visible {
 	display: block;
 	position: absolute;
-	background: #353535;
+	background: #000;
 	color: #fff;
-	filter: alpha(opacity = 90);
-	-moz-opacity: .9;
-	opacity: .9;
+	filter: alpha(opacity = 80);
+	-moz-opacity: .8;
+	opacity: .8;
 	position: fixed;
 	left: 0px;
 	top: 0px;
@@ -132,6 +132,7 @@
 	width: 100%;
 	height: 100%;
 	text-align: center;
+	cursor: pointer;
 }
 
 .hidden {
