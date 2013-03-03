@@ -318,7 +318,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 			$this->gmap->addMarker(floatval($val["latitude"]),floatval($val["longitude"]),$icon["name"],$icon["name"],$html,$ico_n,$ico_s);
 		}
 
-		$GLOBALS['TSFE']->additionalHeaderData[$extKey."1"] = $this->gmap->getHeaderScript();
+		$GLOBALS['TSFE']->additionalHeaderData[$extKey."1"] = $this->gmap->getHeaderScript($this->conf["includeJQuery"]);
 		$GLOBALS['TSFE']->config['config']['doctype'] = "xhtml_strict";
 		
 		$content = $this->gmap->getContentElement();

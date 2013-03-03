@@ -14,7 +14,7 @@ config{
 page.includeCSS.file999 = EXT:pm_tour/pi1/res/defaultStyle.css
 
 plugin.tx_pmtour_pi1 {
-
+  includeJQuery = 1
   # template file
   templateFile = EXT:pm_tour/pi1/res/template.tmpl
   googleMap {
