@@ -240,12 +240,18 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		while (is_numeric($this->gpx->output["wpt".$i]["LON"])) {
 			$wpt = $this->gpx->output["wpt".$i++];
 			$symbol = strtolower(str_replace(array(" ",","),"",$wpt["SYM"]));
-
-			if(array_key_exists($symbol,$symbolIcons) && file_exists($GLOBALS['TSFE']->tmpl->getFileName($symbolIcons[$symbol]))){
-				$image = $baseURL.$GLOBALS['TSFE']->tmpl->getFileName($symbolIcons[$symbol]);
+			
+			$iconPath = null;
+			if(array_key_exists($symbol,$symbolIcons)) { 
+				$iconPath = $symbolIcons[$symbol];
+			} else if (array_key_exists($wpt["NAME"],$symbolIcons)) {
+				$iconPath = $symbolIcons[$wpt["NAME"]];
 			}
-			else
-				$image = null;
+			
+			$image = null;
+			if ($iconPath && file_exists($GLOBALS['TSFE']->tmpl->getFileName($iconPath))) {
+				$image = $baseURL.$GLOBALS['TSFE']->tmpl->getFileName($iconPath);
+			}
 				
 			$html = $this->createMarkerPopupHtml($wpt,$image);
 			$hover = $html == null ? $wpt["NAME"] : $this->cObj->stdWrap($wpt["NAME"], $this->conf["marker."]["hoverPopupAvailable_stdWrap."]) ;
