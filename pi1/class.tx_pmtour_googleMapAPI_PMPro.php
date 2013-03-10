@@ -122,7 +122,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$this->title ="";
 	}
 	
-	function addMarker($lat, $lon, $title, $hover, $html = '', $iconImage = '', $iconShadowImage = '') {
+	function addMarker($lat, $lon, $title, $hover, $html = '', $iconImage = '', $iconShadowImage = '', $image=null, $href=null) {
 		$marker['lon'] = $lon;
 		$marker['lat'] = $lat;
 		$marker['title'] = $title;
@@ -159,6 +159,12 @@ class tx_pmtour_googleMapAPI_PMPro {
 			}
 			$marker['icon'] = $icon_info;
 		}
+		if ($image) {
+			$marker['image'] = $image;
+		}
+		if ($href) {
+			$marker['href'] = $href;
+		}
 		$this->markers[] = $marker;
 		return count($this->markers) - 1;
 	}
@@ -185,6 +191,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 		}
 		$ret .= $this->addLine('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=%s"></script>');
 		$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/pmtourmap.js" type="text/javascript"></script>';
+		$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/imagePopup.js" type="text/javascript"></script>';
 		return sprintf($ret, $this->api_key);
 	}
 	
@@ -235,6 +242,12 @@ class tx_pmtour_googleMapAPI_PMPro {
 			array_push($gmarkeroptions, "title:'".$marker["hover"]."'");
 			array_push($gmarkeroptions, "lat:".$marker["lat"]."");
 			array_push($gmarkeroptions, "lng:".$marker["lon"]."");
+			if ($marker["image"]) {
+				array_push($gmarkeroptions, "image:'".$marker["image"]."'");
+			}
+			if ($marker["href"]) {
+				array_push($gmarkeroptions, "href:'".$marker["href"]."'");
+			}
 			if ($marker["html"] != null) {
 				$html = str_replace("'","\'",$marker["html"]);
 				array_push($gmarkeroptions, "popup_html:'".$html."'");

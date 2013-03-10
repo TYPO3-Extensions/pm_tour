@@ -119,16 +119,24 @@ class tx_pmtour_pi1 extends tslib_pibase {
 				  	$l["stdWrap."]["typolink."]["title"] = $imgTitle;
 				  }
 				}
+				$imageTag = $this->cObj->IMAGE($l);
+				array_push($this->imageTags, $imageTag);	
 				
+				// I would prefer to get the generated tmpfile url and a href directly
+				$imgsrc_pattern = 'src="([^"]+)"';
+				ereg($imgsrc_pattern,$imageTag,$regs);
+				$imgsrc=$regs[1];
+				$href_pattern = 'href="([^"]+)"';
+				ereg($href_pattern,$imageTag,$regs);
+				$ahref=$regs[1];
+
 				if($this->conf["singleView."]["geotagging"] == 1 && function_exists('exif_read_data')){
 					$this->geotag = new tx_pmtour_geotagging($l, $this->cObj, $this->conf, $this->templateItems);
 					if(is_numeric($this->geotag->output["Lat"]))
-						$this->gmap->addMarker(floatval($this->geotag->output["Lat"]),floatval($this->geotag->output["Lon"]),$this->geotag->output["Title"],$this->geotag->output["Hover"],$this->geotag->output["Html"],$this->geotag->output["Ico_n"],$this->geotag->output["Ico_s"]);
+						$this->gmap->addMarker(floatval($this->geotag->output["Lat"]),floatval($this->geotag->output["Lon"]),$this->geotag->output["Title"],$this->geotag->output["Hover"],$this->geotag->output["Html"],null,null,$imgsrc,$ahref);
 				}
 				if(!function_exists('exif_read_data'))
 					echo "Function exif_read_data() not available";
-					
-				array_push($this->imageTags, $this->cObj->IMAGE($l));	
 			}			
 			$imageHtml = implode("",$this->imageTags);
 			if (strlen($imageHtml)>0) {
