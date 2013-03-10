@@ -74,19 +74,23 @@ pmtourmap = function() {
 						+ JSON.stringify(waypoint))
 				return;
 			}
-			var marker = new google.maps.Marker({
-				position : create_latlng(waypoint.lat, waypoint.lng),
-				map : that.map,
-				title : waypoint.title || '',
-				icon : waypoint.icon
-			});
-			var showInfoWindow = function() {
-				var infowindow = new google.maps.InfoWindow({
-					content : waypoint.popup_html
+			if (waypoint.image) {
+				imagePopup.add_waypoints(that.map, [waypoint]);
+			} else {
+				var marker = new google.maps.Marker({
+					position : create_latlng(waypoint.lat, waypoint.lng),
+					map : that.map,
+					title : waypoint.title || '',
+					icon : waypoint.icon
 				});
-				infowindow.open(that.map, marker);
-			};
-			google.maps.event.addListener(marker, 'click', showInfoWindow);
+				var showInfoWindow = function() {
+					var infowindow = new google.maps.InfoWindow({
+						content : waypoint.popup_html
+					});
+					infowindow.open(that.map, marker);
+				};
+				google.maps.event.addListener(marker, 'click', showInfoWindow);
+			}
 		}
 
 		var create_polylines = function() {

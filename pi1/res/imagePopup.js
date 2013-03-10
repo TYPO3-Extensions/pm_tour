@@ -3,15 +3,15 @@ var imagePopup = new function() {
 
 	var namespace = {}
 
-	function ImagePopup(waypoint, imageInfo) {
+	function ImagePopup(map, waypoint, imageInfo) {
 		var ip = this;
 		this.imageInfo = imageInfo;
 		this.waypoint = waypoint;
 
-		var icon = this.updateIcon({url: waypoint.image});
+		var icon = this.updateIcon(map, {url: waypoint.image});
 		this.marker = new google.maps.Marker({
 			position : new google.maps.LatLng(waypoint.lat, waypoint.lng),
-			map : namespace.map,
+			map : map,
 			title : waypoint.title,
 			icon: icon
 		});
@@ -24,8 +24,8 @@ var imagePopup = new function() {
 			ip.close();
 		});
 		
-		google.maps.event.addListener( namespace.map, 'zoom_changed', function() {
-			ip.marker.setIcon(ip.updateIcon(ip.marker.icon));
+		google.maps.event.addListener(map, 'zoom_changed', function() {
+			ip.marker.setIcon(ip.updateIcon(map, ip.marker.icon));
 		  });
 
 		this.animation_duration = 500;
@@ -37,10 +37,10 @@ var imagePopup = new function() {
 	
 	ImagePopup.prototype = new google.maps.OverlayView();
 	
-	ImagePopup.prototype.updateIcon = function(icon) {
-		var scale = 0.3 + (0.1*(namespace.map.getZoom()-12));
+	ImagePopup.prototype.updateIcon = function(map, icon) {
+		var scale = 0.3 + (0.1*(map.getZoom()-12));
 		scale = Math.max(0.05, Math.min(0.8, scale));
-		namespace.debug("Zoom: " + namespace.map.getZoom() + ", scale: " + scale);
+		namespace.debug("Zoom: " + map.getZoom() + ", scale: " + scale);
 		var iconSize = new google.maps.Size(scale*this.imageInfo.width, scale*this.imageInfo.height);
 		icon.scaledSize = new google.maps.Size(iconSize.width, iconSize.height);
 		icon.anchor = new google.maps.Point(iconSize.width/2,iconSize.height/2);
@@ -184,17 +184,18 @@ var imagePopup = new function() {
 		this.setMap(null);
 	}
 	
-	// namespace.debug = console.log
-	namespace.debug = function() {}
+	namespace.debug = console.log
+	//namespace.debug = function() {}
 
 	/* public */
-	namespace.create_image_popup = function(image, waypoint) {
+	namespace.create_image_popup = function(map, image, waypoint) {
 		// now the image is loaded and height and width can be read
+		namespace.debug("Image loaded from " + waypoint.image);
 		var imageInfo = {
 				height: image.height(),
 				width: image.width()
 		}
-		new ImagePopup(waypoint,imageInfo);
+		new ImagePopup(map, waypoint,imageInfo);
 	}
 	
 	namespace.search_image = function(images, src) {
@@ -212,8 +213,8 @@ var imagePopup = new function() {
 	}
 
 	namespace.add_waypoints = function(map, waypoints) {
-		namespace.map = map;
 		var images = $('body img');
+		namespace.debug("Found " + images.length + " images.");
 		for ( var waypoint_key in waypoints) {
 			var waypoint = waypoints[waypoint_key];
 			var img = namespace.search_image(images, waypoint.image);
@@ -221,13 +222,18 @@ var imagePopup = new function() {
 				namespace.debug("No image " + waypoint.image);
 			} else {
 				// bind img and waypoint to load callback function
-				var load_cb = function(image, waypoint) {
+				var load_cb = function(map, image, waypoint) {
 					return function() {
-						namespace.create_image_popup(image, waypoint);
+						namespace.create_image_popup(map, image, waypoint);
 					}
-				}(img, waypoint);
-
-				img.load(load_cb);
+				}(map, img, waypoint);
+				
+				namespace.debug("Waiting for loading of image " + waypoint.image + " ...");
+				// Doing the tmpImg trick here to get always a load event triggered, even if 
+				// the image is already loaded and in cache
+				var tmpImg = new Image() ;
+				tmpImg.onload = load_cb;
+			    tmpImg.src = img.attr('src') ;
 			}
 		}
 	}
