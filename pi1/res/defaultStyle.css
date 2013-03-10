@@ -169,3 +169,21 @@
 a > img {
     border: 0;
 }
+
+
+.imagePopup {
+  position: absolute;
+  box-shadow: 5px 5px 5px #AAAAAA;	
+  opacity: 0.1;
+  width: 50px;
+}
+
+.imagePopup > a {
+	height: 100%;
+}
+
+.imagePopup  img {
+  max-width: 100%;
+  vertical-align:middle;
+  border: 0 auto;
+}

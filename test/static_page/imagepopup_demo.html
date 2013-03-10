@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+	<link media="screen" type="text/css" href="../../pi1/res/defaultStyle.css" rel="stylesheet">
+	
+	<title>Image Popup static</title>
+	<script type="text/javascript" src="../../pi1/res/jquery-1.5.1.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyDVtbhNpfSkCZO79SmU4BVOvE2OwUDnFBA"></script>
+	<script type="text/javascript" src="../../pi1/res/imagepopup.js"></script>
+	<script type="text/javascript">
+	      function initialize() {
+        var center = new google.maps.LatLng(51.48,7.11);
+        var lat_offset = 0.05;
+        var lng_offset = 0.1;
+        var mapOptions = {
+          zoom: 12,
+          center: center,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+        var imageLandscape = "../resources/RheinelbeLandscape.jpg";
+        var imagePortrait = "../resources/RheinelbePortrait.jpg";
+        
+        var m_middle = {
+            lat: center.lat(), 
+            lng: center.lng(),
+            title: 'Middle',
+            image: imageLandscape
+        };
+        
+		var m_middle_near = {
+            lat: center.lat()+lat_offset/10,
+            lng: center.lng()+lng_offset/10,
+            image: imageLandscape
+        };
+        
+        var m_top_right = {
+            lat: center.lat() + lat_offset, 
+            lng: center.lng() + lng_offset,
+            title: 'Top left',
+            image: imagePortrait
+        };
+        
+        var m_top_left = {
+            lat: center.lat() + lat_offset,
+            lng: center.lng() - lng_offset,
+            title: 'Top left',
+            image: imageLandscape
+        };
+        
+        var m_bottom_right = {
+            lat: center.lat() - lat_offset,
+            lng: center.lng() + lng_offset,
+            title: 'Bottom Right',
+            image: imagePortrait
+        };
+        
+        var m_bottom_left = {
+            lat: center.lat() - lat_offset, 
+            lng: center.lng() -lng_offset,
+            title: 'Bottom left',
+            image: imagePortrait,
+            href: 'http://www.google.de'
+        };
+        
+        var m_bare = {
+            lat: center.lat() - lat_offset/2, 
+            lng: center.lng() -lng_offset/2,
+            title: 'No URL'
+        };
+
+        imagePopup.add_waypoints(map, [m_top_left, m_top_right, m_bottom_left, m_bottom_right, m_middle, m_middle_near, m_bare]);
+		
+      }
+      $(document).ready(initialize);
+	</script>
+  </head>
+  <body>
+     
+	<div id="wrap">
+
+		<div id="header">
+			<h2>A static demo page for image popup</h2>
+		</div>
+
+		<div id="map" style="width:800px;height:640px"/>
+	</div>
+     <img id="abc" src="../resources/RheinelbeLandscape.jpg" border="0" alt="" title="landscape" />
+     <img src="../resources/RheinelbePortrait.jpg" border="0" alt="" title="Portrait" />
+  </body>
+</html>
