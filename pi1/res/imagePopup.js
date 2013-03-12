@@ -192,8 +192,8 @@ var imagePopup = new function() {
 		this.setMap(null);
 	}
 	
-	namespace.debug = console.log
-	//namespace.debug = function() {}
+	//namespace.debug = console.log
+	namespace.debug = function() {}
 
 	/* public */
 	namespace.create_image_popup = function(map, image, waypoint) {
