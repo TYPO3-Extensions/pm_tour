@@ -1,7 +1,7 @@
 
 var imagePopup = new function() {
 
-	var namespace = {}
+	var namespace = {};
 
 	function ImagePopup(map, waypoint, imageInfo) {
 		var ip = this;
@@ -24,6 +24,8 @@ var imagePopup = new function() {
 			ip.close();
 		});
 		
+		google.maps.event.addListener(this.marker, "click", this.createClickCallback());
+			
 		google.maps.event.addListener(map, 'zoom_changed', function() {
 			ip.marker.setIcon(ip.updateIcon(map, ip.marker.icon));
 		  });
@@ -36,6 +38,11 @@ var imagePopup = new function() {
 	}
 	
 	ImagePopup.prototype = new google.maps.OverlayView();
+	
+	ImagePopup.prototype.createClickCallback = function() {
+		var img = this.imageInfo.imageJQuery;
+		return function() { img.click(); return false; };	
+	}
 	
 	ImagePopup.prototype.updateIcon = function(map, icon) {
 		var scale = 0.3 + (0.1*(map.getZoom()-12));
@@ -58,6 +65,7 @@ var imagePopup = new function() {
 
 		// Add the InfoBox DIV to the pane
 		this.div = $(html).appendTo($(this.getPanes()["floatPane"]));
+		$(this.div, "a").click(this.createClickCallback());
 
 		// This handler prevents an event in the popup div from being passed on to
 		// the map.
@@ -76,7 +84,7 @@ var imagePopup = new function() {
 			namespace.debug("ERROR. listeners  not empty");
 		}
 		this.eventListeners = [];
-		events = [ "mousedown", "mouseover", "mouseup", "mousemove", "click",
+		events = [ "mousedown", "mouseover", "mouseup", "mousemove", "cldick",
 				"dblclick", "touchstart", "touchend", "touchmove" ];
 
 		for (i = 0; i < events.length; i++) {
@@ -193,7 +201,8 @@ var imagePopup = new function() {
 		namespace.debug("Image loaded from " + waypoint.image);
 		var imageInfo = {
 				height: image.height(),
-				width: image.width()
+				width: image.width(),
+				imageJQuery: image
 		}
 		new ImagePopup(map, waypoint,imageInfo);
 	}
@@ -240,3 +249,5 @@ var imagePopup = new function() {
 
 	return namespace;
 }(); // end namespace imagePopup
+
+
