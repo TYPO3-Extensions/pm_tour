@@ -46,44 +46,29 @@
 <!-- ###SINGLEVIEW### begin -->
 <div class="pm_tours-single">
 ###TOURNAME###
-<table cellpadding="0" cellspacing="3" border="0" width="100%">
-	<tr>
-		<td id="head">Beschreibung:</td>
-		<td id="data">###TOURDESCRIPTION###</td>
-	</tr>
-	<tr>
-		<td id="head">Länge:</td>
-		<td id="data">###TOURLENGTH###</td>
-	</tr>
-	<tr>
-		<td id="head">Dauer:</td>
-		<td id="data">###TOURDURATION###</td>
-	</tr>
-	<tr>
-		<td id="head">Bilder:</td>
-		<td id="data">###TOURIMAGES###</td>
-	</tr>
-	<tr>
-		<td id="head">GPX Datei:</td>
-		<td id="data">###GPXFILE###</td>
-	</tr>	
-	<tr id="googlemap">
-		<td colspan="2">###GOOGLEMAP###</td>
-	</tr>
+
+<p>###TOURDESCRIPTION###</p>
+
+<div class="pm_tours-single-images">
+###TOURIMAGES###
+</div>
+
+
+<div class="pm_tours-single-data">###GPXFILE### (###TOURLENGTH###, ###TOURDURATION###)</div>
+
+###GOOGLEMAP###
+
 	<!-- ###ALTITUDEPROFILESUBPART### -->
 	<!-- ###ALTITUDEPROFILE### -->
-	<tr valign="top">
-	    <td colspan="2"><b>Hoehenprofil:</b></td>
-	</tr>
-	<tr valign="top">	
-		<td colspan="2">###ALTITUDEPROFILEIMG###</td>
-	</tr>
+<div class="pm_tours-single-altitude">		
+###ALTITUDEPROFILEIMG###
+</div>
 	<!-- ###ALTITUDEPROFILE### -->
-	<!-- ###ALTITUDEPROFILESUBPART### -->	
-	<tr>
-		<td id="back" colspan="2"><a href="javascript:history.go(-1);">« zurück</a></td>
-	</tr>
-</table>
+	<!-- ###ALTITUDEPROFILESUBPART### -->
+	
+<div class="pm_tours-single-back">	
+<a href="javascript:history.go(-1);">« zurück</a>
+</div>
 </div>
 
 <!-- ###SINGLEVIEW### end -->
