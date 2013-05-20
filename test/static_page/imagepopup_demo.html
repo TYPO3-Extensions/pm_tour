@@ -15,7 +15,7 @@
         var lat_offset = 0.05;
         var lng_offset = 0.1;
         var mapOptions = {
-          zoom: 12,
+          zoom: 6,
           center: center,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
@@ -72,8 +72,7 @@
             title: 'No URL'
         };
 
-        imagePopup.add_waypoints(map, [m_top_left, m_top_right, m_bottom_left, m_bottom_right, m_middle, m_middle_near, m_bare]);
-		
+        imagePopup.add_waypoints(map, [m_top_left, m_top_right, m_bottom_left, m_bottom_right, m_middle, m_middle_near, m_bare], { max_length: 80});		
       }
       $(document).ready(initialize);
 	</script>

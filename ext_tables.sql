@@ -73,8 +73,8 @@ CREATE TABLE tx_pmtour_tour (
 	gpxfile blob NOT NULL,
 	displaytype int(11) DEFAULT '0' NOT NULL,
 	region int(11) DEFAULT '0' NOT NULL,
-	showfilter int(11) DEFAULT '1' NOT NULL,
 	showaltitudeprofile tinyint(3) DEFAULT '0' NOT NULL,
+	image_marker_max_length int(11) DEFAULT '64' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)

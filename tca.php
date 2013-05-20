@@ -181,7 +181,7 @@ $TCA["tx_pmtour_countries"] = Array (
 $TCA["tx_pmtour_tour"] = Array (
 	"ctrl" => $TCA["tx_pmtour_tour"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,name,description,number,length_km,duration_h,images,imagecaptions,gpxfile,displaytype,region,showfilter,showaltitudeprofile"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,name,description,number,length_km,duration_h,images,imagecaptions,gpxfile,displaytype,region,showaltitudeprofile,image_marker_max_length"
 	),
 	"feInterface" => $TCA["tx_pmtour_tour"]["feInterface"],
 	"columns" => Array (
@@ -416,16 +416,6 @@ $TCA["tx_pmtour_tour"] = Array (
 				),
 			)
 		),
-		"showfilter" => Array (		
-			"exclude" => 1,		
-			"label" => "LLL:EXT:pm_tour/locallang_db.php:tx_pmtour_tour.showfilter",		
-			"config" => Array (
-				"type" => "input",	
-				"size" => "5",	
-				"eval" => "required,int",
-				"default" => "1"
-			)
-		),
 		"showaltitudeprofile" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:pm_tour/locallang_db.php:tx_pmtour_tour.showaltitudeprofile",		
@@ -434,9 +424,25 @@ $TCA["tx_pmtour_tour"] = Array (
 				"default" => 0,
 			)
 		),
+		'image_marker_max_length' => array(
+				'exclude' => 1,
+				'label' => 'LLL:EXT:pm_tour/locallang_db.xml:tx_pmtour_tour.image_marker_max_length',
+				'config' => array(
+						'type'     => 'input',
+						'size'     => '4',
+						'max'      => '4',
+						'eval'     => 'int',
+						'checkbox' => '0',
+						'range'    => array(
+								'upper' => '1000',
+								'lower' => '10'
+						),
+						'default' => 0
+				)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], number, length_km, duration_h, images, imagecaptions, gpxfile, displaytype, region, showfilter,showaltitudeprofile")
+		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, name, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], number, length_km, duration_h, images, imagecaptions, gpxfile, displaytype, region, showaltitudeprofile, image_marker_max_length")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "starttime, endtime, fe_group")

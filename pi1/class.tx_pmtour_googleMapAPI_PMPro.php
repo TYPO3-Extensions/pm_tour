@@ -78,6 +78,10 @@ class tx_pmtour_googleMapAPI_PMPro {
 	function setTitle($title) {
 		$this->title=$title;
 	}
+	
+	function setImageMarkerMaxLength($imageMarkerMaxLength) {
+		$this->imageMarkerMaxLength = $imageMarkerMaxLength;
+	}
 
 	function setHeight($height) {
 		if (!preg_match('!^(\d+)(.*)$!', $height,$_match)) {
@@ -208,6 +212,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$ret .= $this->addLine("title:'" . $this->title . "',", 3);
 		$ret .= $this->addLine("width:'" . $this->width . "',", 3);
 		$ret .= $this->addLine("height:'" . $this->height . "',", 3);
+		$ret .= $this->addLine("imageMarkerMaxLength: " . $this->imageMarkerMaxLength . ",", 3);
 		
 		
 		//Create Markers

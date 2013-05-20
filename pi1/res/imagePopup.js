@@ -8,7 +8,7 @@ var imagePopup = new function() {
 		this.imageInfo = imageInfo;
 		this.waypoint = waypoint;
 
-		var icon = this.updateIcon(map, {url: waypoint.image});
+		var icon = this.updateIconOptions(map, {url: waypoint.image});
 		this.marker = new google.maps.Marker({
 			position : new google.maps.LatLng(waypoint.lat, waypoint.lng),
 			map : map,
@@ -26,10 +26,6 @@ var imagePopup = new function() {
 		
 		google.maps.event.addListener(this.marker, "click", this.createClickCallback());
 			
-		google.maps.event.addListener(map, 'zoom_changed', function() {
-			ip.marker.setIcon(ip.updateIcon(map, ip.marker.icon));
-		  });
-
 		this.animation_duration = 500;
 		// the anchor of the image which is placed onto the position of the marker.
 		// the anchor starts in the bottom left corner and increases in direction top and right
@@ -44,14 +40,16 @@ var imagePopup = new function() {
 		return function() { img.click(); return false; };	
 	}
 	
-	ImagePopup.prototype.updateIcon = function(map, icon) {
-		var scale = 0.3 + (0.1*(map.getZoom()-12));
-		scale = Math.max(0.05, Math.min(0.8, scale));
-		namespace.debug("Zoom: " + map.getZoom() + ", scale: " + scale);
+	ImagePopup.prototype.updateIconOptions = function(map, iconOptions) {
+		//var scale = 0.3 + (0.1*(map.getZoom()-12));
+		//scale = Math.max(0.2, Math.min(0.8, scale));
+		
+		var scale = Math.min(this.imageInfo.max_length / this.imageInfo.width, this.imageInfo.max_length / this.imageInfo.height)
+		namespace.debug("Scaling image: " + scale);
 		var iconSize = new google.maps.Size(scale*this.imageInfo.width, scale*this.imageInfo.height);
-		icon.scaledSize = new google.maps.Size(iconSize.width, iconSize.height);
-		icon.anchor = new google.maps.Point(iconSize.width/2,iconSize.height/2);
-		return icon;
+		iconOptions.scaledSize = new google.maps.Size(iconSize.width, iconSize.height);
+		iconOptions.anchor = new google.maps.Point(iconSize.width/2,iconSize.height/2);
+		return iconOptions;
 	};
 
 
@@ -192,19 +190,22 @@ var imagePopup = new function() {
 		this.setMap(null);
 	}
 	
+	/* public */
+	
 	//namespace.debug = console.log
 	namespace.debug = function() {}
 
-	/* public */
-	namespace.create_image_popup = function(map, image, waypoint) {
+	// max_length: maximum length in pixel of image edges, referring to width in landscape and height in portrait.
+	namespace.create_image_popup = function(map, image, waypoint, max_length = 64) {
 		// now the image is loaded and height and width can be read
 		namespace.debug("Image loaded from " + waypoint.image);
 		var imageInfo = {
 				height: image.height(),
 				width: image.width(),
-				imageJQuery: image
+				imageJQuery: image,
+				max_length: max_length
 		}
-		new ImagePopup(map, waypoint,imageInfo);
+		new ImagePopup(map, waypoint, imageInfo);
 	}
 	
 	namespace.search_image = function(images, src) {
@@ -221,7 +222,7 @@ var imagePopup = new function() {
 		return img;
 	}
 
-	namespace.add_waypoints = function(map, waypoints) {
+	namespace.add_waypoints = function(map, waypoints, options = {}) {
 		var images = $('body img');
 		namespace.debug("Found " + images.length + " images.");
 		for ( var waypoint_key in waypoints) {
@@ -233,7 +234,7 @@ var imagePopup = new function() {
 				// bind img and waypoint to load callback function
 				var load_cb = function(map, image, waypoint) {
 					return function() {
-						namespace.create_image_popup(map, image, waypoint);
+						namespace.create_image_popup(map, image, waypoint, options.max_length);
 					}
 				}(map, img, waypoint);
 				

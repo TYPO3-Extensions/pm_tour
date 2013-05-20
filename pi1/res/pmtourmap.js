@@ -34,6 +34,7 @@ pmtourmap = function() {
 			title : 'GPX on map with pm_tour', // used in toolbar below map
 			width : '800px',
 			height : '640px',
+			imageMarkerMaxLength: 64, 
 			fullscreen_background_div_id : 'fullscreen_background',
 			fullscreen_exit_text : 'Exit full screen modus',
 			fullscreen_show_text : 'Enlarge map',
@@ -75,7 +76,7 @@ pmtourmap = function() {
 				return;
 			}
 			if (waypoint.image) {
-				imagePopup.add_waypoints(that.map, [waypoint]);
+				imagePopup.add_waypoints(that.map, [waypoint], {max_length: map_spec.imageMarkerMaxLength });
 			} else {
 				var marker = new google.maps.Marker({
 					position : create_latlng(waypoint.lat, waypoint.lng),

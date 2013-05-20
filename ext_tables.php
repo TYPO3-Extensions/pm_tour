@@ -86,7 +86,7 @@ $TCA["tx_pmtour_tour"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_pmtour_tour.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, starttime, endtime, fe_group, name, description, number, length_km, duration_h, images, imagecaptions, gpxfile, displaytype, region, showfilter, showaltitudeprofile",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, starttime, endtime, fe_group, name, description, number, length_km, duration_h, images, imagecaptions, gpxfile, displaytype, region, showaltitudeprofile, image_marker_max_length",
 	)
 );
 

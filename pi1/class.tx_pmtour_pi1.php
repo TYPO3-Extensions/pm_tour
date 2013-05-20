@@ -91,6 +91,7 @@ class tx_pmtour_pi1 extends tslib_pibase {
 		$tours = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($selectFields, $tables, $where, null, $order);
 		foreach ($tours as $tour=>$val) {
 			$this->gmap->setTitle($val["name"]);
+			$this->gmap->setImageMarkerMaxLength($val["image_marker_max_length"]);
 		
 			$markerArray = array();
 			$subpartArray = array();
