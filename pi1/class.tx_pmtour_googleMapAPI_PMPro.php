@@ -44,16 +44,15 @@ class tx_pmtour_googleMapAPI_PMPro {
 	var $map_id = "";
 	var $width = "500px";
 	var $height = "500px";
-	var $map_type = "G_MAP_TYPE";
 	var $markers = array();
 	var $polylines = array();
 	
 		
-	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type="map", $layerIds=null, $layerNames=null) {
+	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type_id, $layerIds=null, $layerNames=null) {
 		$this->api_key = $api_key;
 		
 		$this->map_id = "map".md5(uniqid(rand())); //"map"; //"map".md5(uniqid(rand()));
-		$this->setMapType($map_type);
+		$this->setMapTypeId($map_type_id);
 		$this->layerIds=$layerIds == null ? array() : explode("|",$layerIds);
 		$this->layerNames=$layerNames == null ? array() : explode("|", $layerNames);
 	}
@@ -105,19 +104,8 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$this->setHeight($height);
 	}
 	
-	function setMapType($type) {
-		switch ($type) {
-			case 'hybrid':
-				$this->map_type = 'G_HYBRID_MAP';
-				break;
-			case 'satellite':
-				$this->map_type = 'G_SATELLITE_MAP';
-				break;
-			case 'map':
-			default:
-				$this->map_type = 'G_NORMAL_MAP';
-				break;
-		}
+	function setMapTypeId($map_type_id) {
+		$this->map_type_id = $map_type_id;
 	}
 	
 	function clear() {
@@ -209,6 +197,7 @@ class tx_pmtour_googleMapAPI_PMPro {
 		// ... and map spec in javascript
 		$ret .= $this->addLine('<script type="text/javascript">');
 		$ret .= $this->addLine(sprintf("pmtourmap.map_specs['%s'] =  {", $this->map_id),2);
+		$ret .= $this->addLine("mapTypeId:'" . $this->map_type_id . "',", 3);
 		$ret .= $this->addLine("title:'" . $this->title . "',", 3);
 		$ret .= $this->addLine("width:'" . $this->width . "',", 3);
 		$ret .= $this->addLine("height:'" . $this->height . "',", 3);

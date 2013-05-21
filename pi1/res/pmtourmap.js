@@ -31,6 +31,7 @@ pmtourmap = function() {
 		var bounds = new google.maps.LatLngBounds();
 
 		var default_spec = {
+			mapTypeId: 'terrain',
 			title : 'GPX on map with pm_tour', // used in toolbar below map
 			width : '800px',
 			height : '640px',
@@ -121,7 +122,7 @@ pmtourmap = function() {
 			that.map_div = document.getElementById(map_id) || create_map_div();
 			set_map_size_embedded();
 			var mapOptions = {
-				mapTypeId : google.maps.MapTypeId.TERRAIN
+				mapTypeId : map_spec.mapTypeId
 			};
 			that.map = new google.maps.Map(that.map_div, mapOptions);
 			create_markers();

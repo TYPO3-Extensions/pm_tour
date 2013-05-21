@@ -21,7 +21,7 @@ plugin.tx_pmtour_pi1 {
 	  key = 
 	  width=600px
 	  height=400px
-	  mapType=hybrid
+	  mapType={$plugin.tx_pmtour_pi1.mapType}
 	  layerIds=org.wikipedia.de|com.panoramio.all
 	  layerNames=Wikipedia|Bilder
 	  visible=1

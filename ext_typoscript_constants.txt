@@ -1,4 +1,5 @@
 
 plugin.tx_pmtour_pi1 {
-
+# cat=plugin.tx_pmtour_pi1/content/210; type=options[hybrid,roadmap,satellite,terrain]; label=The type id of the map: see https://developers.google.com/maps/documentation/javascript/reference#MapTypeId
+	mapType=hybrid
 }
