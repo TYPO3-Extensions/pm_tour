@@ -41,7 +41,8 @@ pmtourmap = function() {
 			fullscreen_show_text : 'Enlarge map',
 			waypoints : [],
 			tracks : [],
-			image_folder : 'typo3conf/ext/pm_tour/pi1/res'
+			image_folder : 'typo3conf/ext/pm_tour/pi1/res',
+			panoramio: false
 		}
 
 		var extend = function(first, second) {
@@ -129,6 +130,7 @@ pmtourmap = function() {
 			create_polylines();
 			fitBounds();
 			create_map_toolbar_div();
+			add_panoramio_layer();
 		};
 
 		var set_map_size_embedded = function() {
@@ -171,6 +173,48 @@ pmtourmap = function() {
 			// insert a new line it is inserted before the non-floating span.
 			var html = '<div class="map_toolbar" style="'+style+'"><a href="'+href+'"><img src="'+src+'" title="'+title+'"></a><span>'+map_spec.title+'</span></div>';
 			$(that.map_div).after(html);
+		}
+		
+		var add_panoramio_layer = function() {
+			// google.maps.panoramio library must be loaded via libraries parameter
+			if (!map_spec.panoramio || !google.maps.panoramio) {
+				return;
+			}
+			// create the panoramio layer but do not show it initially
+			var panoramioLayer = new google.maps.panoramio.PanoramioLayer()
+			var button = create_panoramio_button();
+			that.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(button);
+			google.maps.event.addDomListener(button, 'click', function() {
+				panoramioLayer.setMap(panoramioLayer.getMap() ? null : that.map);
+			});
+		};
+		
+		var create_panoramio_button = function () {
+			  var controlDiv = document.createElement("div");
+			  // example for custom control from 
+			  // https://developers.google.com/maps/documentation/javascript/examples/control-custom
+			  controlDiv.style.padding = '5px';
+
+			  // Set CSS for the control border
+			  var controlUI = document.createElement('div');
+			  controlUI.style.backgroundColor = 'white';
+			  controlUI.style.borderStyle = 'solid';
+			  controlUI.style.borderWidth = '1px';
+			  controlUI.style.cursor = 'pointer';
+			  controlUI.style.textAlign = 'center';
+			  controlUI.title = 'Show/Hide Panoramio Photos';
+			  controlDiv.appendChild(controlUI);
+
+			  // Set CSS for the control interior
+			  var controlText = document.createElement('div');
+			  controlText.style.fontFamily = 'Arial,sans-serif';
+			  controlText.style.fontSize = '12px';
+			  controlText.style.paddingLeft = '4px';
+			  controlText.style.paddingRight = '4px';
+			  controlText.innerHTML = '<b>Panoramio</b>';
+			  controlUI.appendChild(controlText);
+			  
+			  return controlDiv;
 		}
 
 		that = {
