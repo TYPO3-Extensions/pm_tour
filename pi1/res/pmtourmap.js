@@ -42,7 +42,7 @@ pmtourmap = function() {
 			waypoints : [],
 			tracks : [],
 			image_folder : 'typo3conf/ext/pm_tour/pi1/res',
-			panoramio: false
+			panoramio: { button_label: 'Panoramio', button_title: 'Show/hide pictures from panoramio', is_enabled : false }
 		}
 
 		var extend = function(first, second) {
@@ -177,7 +177,8 @@ pmtourmap = function() {
 		
 		var add_panoramio_layer = function() {
 			// google.maps.panoramio library must be loaded via libraries parameter
-			if (!map_spec.panoramio || !google.maps.panoramio) {
+			var is_enabled = map_spec.panoramio && map_spec.panoramio.is_enabled;
+			if (!is_enabled || !google.maps.panoramio) {
 				return;
 			}
 			// create the panoramio layer but do not show it initially
@@ -202,7 +203,7 @@ pmtourmap = function() {
 			  controlUI.style.borderWidth = '1px';
 			  controlUI.style.cursor = 'pointer';
 			  controlUI.style.textAlign = 'center';
-			  controlUI.title = 'Show/Hide Panoramio Photos';
+			  controlUI.title = map_spec.panoramio.button_title;
 			  controlDiv.appendChild(controlUI);
 
 			  // Set CSS for the control interior
@@ -211,7 +212,7 @@ pmtourmap = function() {
 			  controlText.style.fontSize = '12px';
 			  controlText.style.paddingLeft = '4px';
 			  controlText.style.paddingRight = '4px';
-			  controlText.innerHTML = '<b>Panoramio</b>';
+			  controlText.innerHTML = '<b>'+map_spec.panoramio.button_label+'</b>';
 			  controlUI.appendChild(controlText);
 			  
 			  return controlDiv;

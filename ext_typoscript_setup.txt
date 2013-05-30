@@ -22,8 +22,11 @@ plugin.tx_pmtour_pi1 {
 	  width=600px
 	  height=400px
 	  mapType={$plugin.tx_pmtour_pi1.mapType}
-	  layerIds=org.wikipedia.de|com.panoramio.all
-	  layerNames=Wikipedia|Bilder
+	  panoramio {
+	  	enabled = {$plugin.tx_pmtour_pi1.panoramio_enabled}
+	  	button_title = {$plugin.tx_pmtour_pi1.panoramio_button_title}
+	  	button_label = {$plugin.tx_pmtour_pi1.panoramio_button_label}
+	  }
 	  visible=1
   }
   

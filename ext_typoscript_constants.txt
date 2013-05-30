@@ -2,4 +2,13 @@
 plugin.tx_pmtour_pi1 {
 # cat=plugin.tx_pmtour_pi1/content/210; type=options[hybrid,roadmap,satellite,terrain]; label=The type id of the map: see https://developers.google.com/maps/documentation/javascript/reference#MapTypeId
 	mapType=hybrid
+	
+# cat=plugin.tx_pmtour_pi1/content/220; type=boolean; label=Panoramio layer: Show panoramio layer with a button for enabling the layer
+	panoramio_enabled=1
+	
+# cat=plugin.tx_pmtour_pi1/content/230; type=string; label=Panoramio button label: The label of the toggle button
+	panoramio_button_label=Panoramio
+	
+# cat=plugin.tx_pmtour_pi1/content/240; type=string; label=Panoramio button tooltip: The tooltip of the toggle button
+	panoramio_button_title=Show or hide pictures from panoramio	
 }

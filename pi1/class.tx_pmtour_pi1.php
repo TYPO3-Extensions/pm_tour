@@ -168,7 +168,8 @@ class tx_pmtour_pi1 extends tslib_pibase {
 	}	
 	
 	function initMap() {
-		$this->gmap = new tx_pmtour_googleMapAPI_PMPro($this->conf["googleMap."]["key"],$this->conf["googleMap."]["mapType"], $this->conf["googleMap."]["layerIds"], $this->conf["googleMap."]["layerNames"]);
+		echo t3lib_div::debug($this->conf["googleMap."]["panoramio."],'conf panormaio');
+		$this->gmap = new tx_pmtour_googleMapAPI_PMPro($this->conf["googleMap."]["key"],$this->conf["googleMap."]["mapType"], $this->conf["googleMap."]["panoramio."]);
 		$this->gmap->setWidth($this->conf["googleMap."]["width"]);
 		$this->gmap->setHeight($this->conf["googleMap."]["height"]);
 	}

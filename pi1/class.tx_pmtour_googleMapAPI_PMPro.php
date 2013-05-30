@@ -48,13 +48,12 @@ class tx_pmtour_googleMapAPI_PMPro {
 	var $polylines = array();
 	
 		
-	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type_id, $layerIds=null, $layerNames=null) {
+	function tx_pmtour_googleMapAPI_PMPro($api_key, $map_type_id, $conf_panoramio) {
 		$this->api_key = $api_key;
 		
 		$this->map_id = "map".md5(uniqid(rand())); //"map"; //"map".md5(uniqid(rand()));
 		$this->setMapTypeId($map_type_id);
-		$this->layerIds=$layerIds == null ? array() : explode("|",$layerIds);
-		$this->layerNames=$layerNames == null ? array() : explode("|", $layerNames);
+		$this->conf_panoramio=$conf_panoramio;
 	}
 	
 	function setWidth($width) {
@@ -181,7 +180,8 @@ class tx_pmtour_googleMapAPI_PMPro {
 		if ($includeJQuery) {
 			$ret .= $this->addLine('<script type="text/javascript" src="typo3conf/ext/pm_tour/pi1/res/jquery-1.5.1.min.js"></script>');
 		}
-		$ret .= $this->addLine('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=%s"></script>');
+		$libraries = $this->conf_panoramio["enabled"] ? 'libraries=panoramio&' : '';
+		$ret .= $this->addLine('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?'.$libraries.'sensor=false&key=%s"></script>');
 		$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/pmtourmap.js" type="text/javascript"></script>';
 		$ret .= '<script src="typo3conf/ext/pm_tour/pi1/res/imagePopup.js" type="text/javascript"></script>';
 		return sprintf($ret, $this->api_key);
@@ -202,6 +202,9 @@ class tx_pmtour_googleMapAPI_PMPro {
 		$ret .= $this->addLine("width:'" . $this->width . "',", 3);
 		$ret .= $this->addLine("height:'" . $this->height . "',", 3);
 		$ret .= $this->addLine("imageMarkerMaxLength: " . $this->imageMarkerMaxLength . ",", 3);
+		if ($this->conf_panoramio["enabled"]) {
+			$ret .= $this->addLine("panoramio: { button_label: '".$this->conf_panoramio["button_label"]."', button_title: '".$this->conf_panoramio["button_title"]."', is_enabled: true },", 3);
+		}
 		
 		
 		//Create Markers
@@ -292,38 +295,6 @@ class tx_pmtour_googleMapAPI_PMPro {
 			$ret .= "   ";
 		}
 		return $ret.$text."\n";
-	}
-	
-	function isUsingLayers() {
-		return $this->layerIds!=null && count($this->layerIds) > 0;
-	}
-	
-	function createLayerControl() {
-		if (!$this->isUsingLayers()) {
-			return "";
-		}
-		$result = $this->createLayers();
-		$jsLayerNames = '["'.implode('","', $this->layerNames).'"]';
-		$result .= $this->addLine(sprintf('var layerControl = new LayerControl( %s );',$jsLayerNames),3);
-		return $result;
-	}
-	
-	function createMoreControl($mapname) {
-		if (!$this->isUsingLayers()) {
-			return "";
-		}
-		return $this->addLine(sprintf('%s.addControl(new MoreControl());',$mapname),3);
-	}
-	
-	function createLayers() {
-		$result = $this->addLine("var layers = [];",3);
-		reset($this->layerIds);
-		while (list($layerIndex, $layerId) = each($this->layerIds)) {
-			$result .= $this->addLine('layers['.$layerIndex.'] = new GLayer("'.$layerId.'");',3);
-			$result .= $this->addLine('layers['.$layerIndex.'].Visible = false;',3);
-			$result .= $this->addLine('layers['.$layerIndex.'].Added = false;',3);
-	    }
-	    return $result;
 	}
 	
 }
