@@ -13,7 +13,8 @@ var imagePopup = new function() {
 			position : new google.maps.LatLng(waypoint.lat, waypoint.lng),
 			map : map,
 			title : waypoint.title,
-			icon: icon
+			icon: icon,
+            zIndex: 0
 		});
 		
 		google.maps.event.addListener(this.marker, "mouseover", function(e) {
