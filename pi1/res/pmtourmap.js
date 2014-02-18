@@ -84,7 +84,8 @@ pmtourmap = function() {
 					position : create_latlng(waypoint.lat, waypoint.lng),
 					map : that.map,
 					title : waypoint.title || '',
-					icon : waypoint.icon
+					icon : waypoint.icon,
+                    zIndex: 1
 				});
 				var showInfoWindow = function() {
 					var infowindow = new google.maps.InfoWindow({
